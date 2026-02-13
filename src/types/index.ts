@@ -1,0 +1,146 @@
+// ============================================
+// VozLend — Shared TypeScript Types
+// ============================================
+
+// --- Loan Application (extracted from voice memo) ---
+
+export interface Applicant {
+  name: string | null;
+  current_occupation: string | null;
+  employer_or_school: string | null;
+  degree_program: string | null;
+  previous_employers: string[];
+  previous_roles: string[];
+  location: string | null;
+}
+
+export interface LoanRequest {
+  amount_requested: number | null;
+  currency: string;
+  purpose: string | null;
+  purpose_details: string | null;
+}
+
+export interface RepaymentPlan {
+  strategy: string | null;
+  expected_income_source: string | null;
+  prospective_employers: string[];
+  timeline: string | null;
+}
+
+export interface AdditionalContext {
+  credit_situation: string | null;
+  other_notes: string | null;
+}
+
+export interface Transcription {
+  language_detected: string;
+  raw_text: string;
+  duration?: number;
+}
+
+export interface LoanApplication {
+  applicant: Applicant;
+  loan_request: LoanRequest;
+  repayment_plan: RepaymentPlan;
+  additional_context: AdditionalContext;
+  transcription: Transcription;
+}
+
+// --- Underwriting Result ---
+
+export interface ScoreDimension {
+  score: number;
+  justification: string;
+  weight: number;
+}
+
+export interface Scores {
+  education_institutional_quality: ScoreDimension;
+  professional_network_social_capital: ScoreDimension;
+  character_communication_quality: ScoreDimension;
+  income_stability_earning_potential: ScoreDimension;
+  collateral_asset_base: ScoreDimension;
+  debt_to_income_ratio: ScoreDimension;
+  purpose_alignment: ScoreDimension;
+  repayment_plan_credibility: ScoreDimension;
+}
+
+export type Decision = "approve" | "decline" | "request_more_info";
+
+export interface StressTestDecision {
+  forced_decision: "approve" | "decline";
+  forced_reasoning: string;
+  forced_terms: {
+    approved_amount?: number | null;
+    currency?: string;
+    suggested_interest_rate?: string | null;
+    suggested_term?: string | null;
+  } | null;
+}
+
+export interface Terms {
+  approved_amount: number | null;
+  currency: string;
+  suggested_interest_rate: string | null;
+  suggested_term: string | null;
+  conditions: string[];
+  decline_reasons: string[];
+  additional_questions: string[];
+  stress_test_decision: StressTestDecision;
+}
+
+export interface UnderwritingResult {
+  scores: Scores;
+  weighted_score: number;
+  decision: Decision;
+  decision_summary: string;
+  detailed_analysis: string;
+  terms: Terms;
+}
+
+// --- Processing Pipeline ---
+
+export type ProcessingStep =
+  | "uploading"
+  | "transcribing"
+  | "extracting"
+  | "underwriting"
+  | "complete"
+  | "error";
+
+export interface ProcessingEvent {
+  step: ProcessingStep;
+  progress: number;
+  message?: string;
+}
+
+export interface ProcessingCompleteEvent {
+  reportId: string;
+  report: {
+    application: LoanApplication;
+    underwriting: UnderwritingResult;
+  };
+}
+
+// --- Report ---
+
+export interface FullReport {
+  id: string;
+  createdAt: string;
+  application: LoanApplication;
+  underwriting: UnderwritingResult;
+}
+
+// --- Score dimension labels for display ---
+
+export const SCORE_LABELS: Record<keyof Scores, string> = {
+  education_institutional_quality: "Education & Institutional Quality",
+  professional_network_social_capital: "Professional Network & Social Capital",
+  character_communication_quality: "Character & Communication Quality",
+  income_stability_earning_potential: "Income Stability & Earning Potential",
+  collateral_asset_base: "Collateral & Asset Base",
+  debt_to_income_ratio: "Debt-to-Income Ratio",
+  purpose_alignment: "Purpose Alignment",
+  repayment_plan_credibility: "Repayment Plan Credibility",
+};
