@@ -117,7 +117,7 @@ export function AudioUploader({
             size="lg"
             onClick={onStartProcessing}
             disabled={disabled}
-            className="bg-gray-900 hover:bg-gray-800 text-white pl-7 pr-5 py-3.5 text-sm font-normal rounded-full transition-all flex items-center gap-2 shadow-lg shadow-gray-900/10"
+            className="bg-gradient-to-b from-emerald-400 to-emerald-500 hover:from-emerald-500 hover:to-emerald-600 text-white pl-7 pr-5 py-3.5 text-sm font-normal rounded-full transition-all flex items-center gap-2 shadow-lg shadow-emerald-500/20 hover:shadow-xl hover:shadow-emerald-500/30 active:scale-95"
           >
             {t("upload.analyzeButton")}
             <ArrowRight className="h-4 w-4 stroke-[1.5]" />
