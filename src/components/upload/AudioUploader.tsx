@@ -326,7 +326,7 @@ function AudioRecorderPanel({
       )}
 
       {state === "idle" && (
-        <div className="flex flex-col items-center gap-5">
+        <div className="flex flex-col items-center gap-6">
           {/* Big friendly record button */}
           <button
             onClick={startRecording}
@@ -334,11 +334,13 @@ function AudioRecorderPanel({
           >
             <Mic className="h-9 w-9 stroke-[1.5] transition-transform group-hover:scale-110" />
           </button>
-          <div className="text-center">
-            <p className="text-base font-normal text-gray-700">
-              {t("recorder.tapToRecord")}
-            </p>
-            <p className="mt-1 text-xs text-gray-400 font-light">
+          <p className="text-base font-normal text-gray-700">
+            {t("recorder.tapToRecord")}
+          </p>
+
+          {/* Guidance prompt */}
+          <div className="w-full max-w-sm rounded-xl bg-gray-50/80 border border-gray-100 px-5 py-4 text-center">
+            <p className="text-sm text-gray-500 font-light leading-relaxed">
               {t("recorder.describeRequest")}
             </p>
           </div>

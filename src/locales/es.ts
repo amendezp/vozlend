@@ -49,7 +49,7 @@ export const es: Locale = {
   },
   recorder: {
     tapToRecord: "Toca para empezar a grabar",
-    describeRequest: "Describe tu solicitud de préstamo con tus propias palabras",
+    describeRequest: "Cuéntanos quién eres, a qué te dedicas, cuánto necesitas y cómo planeas pagarlo — entre más detalles, mejor tu oferta",
     tapToStop: "Toca para terminar",
     stopRecording: "Detener Grabación",
     useRecording: "Usar Esta Grabación",

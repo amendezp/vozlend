@@ -45,7 +45,7 @@ export const en = {
   },
   recorder: {
     tapToRecord: "Tap to start recording",
-    describeRequest: "Describe your loan request in your own words",
+    describeRequest: "Tell us about yourself, what you do, how much you need, and how you'll pay it back — the more detail, the better your offer",
     tapToStop: "Tap to finish",
     stopRecording: "Stop Recording",
     useRecording: "Use This Recording",
