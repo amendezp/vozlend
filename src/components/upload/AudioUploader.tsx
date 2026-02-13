@@ -348,23 +348,25 @@ function AudioRecorderPanel({
       {state === "recording" && (
         <div className="flex flex-col items-center gap-4">
           <div className="relative">
+            {/* Pulsing ring — behind button, pointer-events disabled */}
+            <div className="absolute inset-0 rounded-full border-4 border-red-300 animate-ping opacity-30 pointer-events-none" />
             <button
               onClick={stopRecording}
-              className="flex h-20 w-20 items-center justify-center rounded-full bg-red-100 text-red-600 transition-all hover:bg-red-200"
+              className="relative z-10 flex h-20 w-20 items-center justify-center rounded-full bg-red-100 text-red-600 transition-all hover:bg-red-200 hover:scale-105 cursor-pointer"
             >
               <Square className="h-6 w-6 fill-current" />
             </button>
-            {/* Pulsing ring */}
-            <div className="absolute inset-0 rounded-full border-4 border-red-300 animate-ping opacity-30" />
           </div>
-          <div>
-            <p className="text-sm font-medium text-red-600">
-              {t("recorder.recording")} {formatTime(duration)}
-            </p>
-            <p className="mt-1 text-xs text-gray-400">
-              {t("recorder.stopRecording")}
-            </p>
-          </div>
+          <p className="text-lg font-mono font-bold text-red-600">
+            {formatTime(duration)}
+          </p>
+          <button
+            onClick={stopRecording}
+            className="flex items-center gap-2 rounded-xl bg-red-600 px-6 py-2.5 text-sm font-semibold text-white shadow-lg shadow-red-200 transition-all hover:bg-red-700 hover:shadow-xl hover:shadow-red-300 cursor-pointer"
+          >
+            <Square className="h-4 w-4 fill-current" />
+            {t("recorder.stopRecording")}
+          </button>
         </div>
       )}
 

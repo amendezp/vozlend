@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { ArrowLeft, Mic } from "lucide-react";
+import { ArrowLeft, Mic, Download } from "lucide-react";
 import { getReport } from "@/lib/storage";
 import { useLanguage } from "@/context/LanguageContext";
 import { ReportHeader } from "@/components/report/ReportHeader";
@@ -28,6 +28,10 @@ export default function ReportPage() {
     setReport(stored);
     setLoading(false);
   }, [params.id]);
+
+  const handleDownloadPDF = () => {
+    window.print();
+  };
 
   if (loading) {
     return (
@@ -72,13 +76,24 @@ export default function ReportPage() {
             {t("report.brand")}
           </div>
 
-          <Button
-            onClick={() => router.push("/")}
-            size="sm"
-            className="bg-emerald-600 hover:bg-emerald-700 text-white"
-          >
-            {t("report.analyzeAnother")}
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button
+              onClick={handleDownloadPDF}
+              size="sm"
+              variant="outline"
+              className="gap-1.5"
+            >
+              <Download className="h-4 w-4" />
+              {t("report.downloadPdf")}
+            </Button>
+            <Button
+              onClick={() => router.push("/")}
+              size="sm"
+              className="bg-emerald-600 hover:bg-emerald-700 text-white"
+            >
+              {t("report.analyzeAnother")}
+            </Button>
+          </div>
         </div>
       </header>
 

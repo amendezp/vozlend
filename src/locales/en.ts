@@ -64,6 +64,7 @@ export const en = {
     back: "Back",
     brand: "Echo Bank",
     analyzeAnother: "Analyze Another",
+    downloadPdf: "Download PDF",
     notFoundTitle: "Report Not Found",
     notFoundDesc: "This report may have expired or the link is invalid.",
     backToHome: "Back to Home",

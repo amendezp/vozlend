@@ -126,3 +126,54 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* ---- Print / PDF styles ---- */
+@media print {
+  /* Hide non-report elements */
+  header,
+  .no-print,
+  .language-toggle {
+    display: none !important;
+  }
+
+  body {
+    background: white !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Reset page layout */
+  .min-h-screen {
+    min-height: auto !important;
+  }
+
+  /* Ensure cards don't break across pages */
+  .rounded-2xl {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  /* Remove sticky positioning */
+  .sticky {
+    position: static !important;
+  }
+
+  /* Ensure backgrounds print */
+  .bg-emerald-50, .bg-red-50, .bg-amber-50, .bg-blue-50, .bg-purple-50,
+  .bg-emerald-100, .bg-red-100, .bg-amber-100, .bg-gray-50, .bg-gray-100 {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Score bar backgrounds */
+  .bg-emerald-500, .bg-amber-500, .bg-orange-500, .bg-red-500 {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Page margins */
+  @page {
+    margin: 1cm;
+    size: A4;
+  }
+}

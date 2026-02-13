@@ -69,6 +69,7 @@ export const es: Locale = {
     back: "Volver",
     brand: "Echo Bank",
     analyzeAnother: "Analizar Otro",
+    downloadPdf: "Descargar PDF",
     notFoundTitle: "Reporte No Encontrado",
     notFoundDesc:
       "Este reporte puede haber expirado o el enlace es inv\u00e1lido.",
