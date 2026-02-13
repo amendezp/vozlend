@@ -2,7 +2,17 @@
 
 import { useCallback, useState, useRef, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
-import { Upload, FileAudio, X, Mic, Square, RotateCcw, Check } from "lucide-react";
+import {
+  Upload,
+  FileAudio,
+  X,
+  Mic,
+  Square,
+  RotateCcw,
+  Check,
+  Paperclip,
+  ArrowRight,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/context/LanguageContext";
 
@@ -33,7 +43,8 @@ export function AudioUploader({
   const { t } = useLanguage();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<"upload" | "record">("upload");
+  const [showUpload, setShowUpload] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const onDrop = useCallback(
     (acceptedFiles: File[], rejectedFiles: unknown[]) => {
@@ -57,6 +68,7 @@ export function AudioUploader({
         }
         setSelectedFile(file);
         onFileSelected(file);
+        setShowUpload(false);
       }
     },
     [onFileSelected, t]
@@ -67,6 +79,8 @@ export function AudioUploader({
     accept: ACCEPTED_TYPES,
     maxFiles: 1,
     disabled,
+    noClick: true,
+    noKeyboard: true,
   });
 
   const clearFile = () => {
@@ -80,110 +94,111 @@ export function AudioUploader({
   };
 
   return (
-    <div className="mx-auto max-w-lg">
-      {/* Tab Toggle */}
-      <div className="mb-6 flex rounded-lg bg-gray-50 p-1">
-        <button
-          onClick={() => setActiveTab("upload")}
-          className={`flex-1 rounded-md px-4 py-2 text-sm transition-all ${
-            activeTab === "upload"
-              ? "bg-white text-gray-900 shadow-sm font-normal"
-              : "text-gray-400 hover:text-gray-600 font-light"
-          }`}
-        >
-          <Upload className="mr-2 inline-block h-3.5 w-3.5" />
-          {t("upload.tabUpload")}
-        </button>
-        <button
-          onClick={() => setActiveTab("record")}
-          className={`flex-1 rounded-md px-4 py-2 text-sm transition-all ${
-            activeTab === "record"
-              ? "bg-white text-gray-900 shadow-sm font-normal"
-              : "text-gray-400 hover:text-gray-600 font-light"
-          }`}
-        >
-          <Mic className="mr-2 inline-block h-3.5 w-3.5" />
-          {t("upload.tabRecord")}
-        </button>
-      </div>
+    <div className="mx-auto max-w-md" {...getRootProps()}>
+      {/* Hidden file input for the upload link */}
+      <input {...getInputProps()} ref={fileInputRef} />
 
-      {activeTab === "upload" ? (
-        <>
-          {/* Drop zone */}
-          <div
-            {...getRootProps()}
-            className={`relative cursor-pointer rounded-xl border border-dashed p-8 text-center transition-all
-              ${isDragActive ? "border-emerald-400 bg-emerald-50/50" : "border-gray-200 bg-gray-50/30 hover:border-gray-300 hover:bg-gray-50/50"}
-              ${disabled ? "pointer-events-none opacity-50" : ""}
-            `}
-          >
-            <input {...getInputProps()} />
-
-            {selectedFile ? (
-              <div className="flex flex-col items-center gap-3">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-50">
-                  <FileAudio className="h-6 w-6 text-emerald-500 stroke-[1.5]" />
-                </div>
-                <div>
-                  <p className="font-normal text-sm text-gray-900">{selectedFile.name}</p>
-                  <p className="text-xs text-gray-400 font-light">
-                    {(selectedFile.size / 1024 / 1024).toFixed(2)} MB
-                  </p>
-                </div>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    clearFile();
-                  }}
-                  className="flex items-center gap-1 text-xs text-gray-400 hover:text-red-500 font-light"
-                >
-                  <X className="h-3 w-3" />
-                  {t("upload.remove")}
-                </button>
-              </div>
-            ) : (
-              <div className="flex flex-col items-center gap-3">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gray-50">
-                  <Upload className="h-6 w-6 text-gray-300 stroke-[1.5]" />
-                </div>
-                <div>
-                  <p className="text-sm font-normal text-gray-600">
-                    {isDragActive ? t("upload.dropActive") : t("upload.dropIdle")}
-                  </p>
-                  <p className="mt-1 text-xs text-gray-400 font-light">
-                    {t("upload.formats")}
-                  </p>
-                </div>
-              </div>
-            )}
+      {/* ---- Selected file state (shown after recording or upload) ---- */}
+      {selectedFile ? (
+        <div className="flex flex-col items-center gap-5">
+          {/* Success indicator */}
+          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-50 ring-4 ring-emerald-50/50">
+            <Check className="h-7 w-7 text-emerald-500 stroke-[1.5]" />
           </div>
-        </>
-      ) : (
-        <AudioRecorderPanel
-          onRecordingComplete={handleRecordingComplete}
-          disabled={disabled}
-          selectedFile={selectedFile}
-          onClear={clearFile}
-        />
-      )}
+          <div className="text-center">
+            <p className="text-sm font-normal text-gray-900">{selectedFile.name}</p>
+            <p className="mt-0.5 text-xs text-gray-400 font-light">
+              {(selectedFile.size / 1024 / 1024).toFixed(2)} MB · {t("upload.readyToAnalyze")}
+            </p>
+          </div>
 
-      {/* Error message */}
-      {error && (
-        <p className="mt-3 text-center text-xs text-red-500 font-light">{error}</p>
-      )}
-
-      {/* Analyze button */}
-      {selectedFile && (
-        <div className="mt-6 text-center">
+          {/* Analyze CTA — prominent */}
           <Button
             size="lg"
             onClick={onStartProcessing}
             disabled={disabled}
-            className="bg-gray-900 hover:bg-gray-800 text-white px-8 py-3 text-sm font-normal rounded-lg transition-all"
+            className="bg-gray-900 hover:bg-gray-800 text-white pl-7 pr-5 py-3.5 text-sm font-normal rounded-full transition-all flex items-center gap-2 shadow-lg shadow-gray-900/10"
           >
             {t("upload.analyzeButton")}
+            <ArrowRight className="h-4 w-4 stroke-[1.5]" />
           </Button>
+
+          {/* Remove / start over */}
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              clearFile();
+            }}
+            className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-gray-600 font-light transition-colors"
+          >
+            <RotateCcw className="h-3 w-3" />
+            {t("upload.startOver")}
+          </button>
         </div>
+      ) : showUpload ? (
+        /* ---- File upload view (secondary) ---- */
+        <div className="flex flex-col items-center gap-4">
+          <div
+            onClick={() => fileInputRef.current?.click()}
+            className={`w-full cursor-pointer rounded-2xl border-2 border-dashed p-10 text-center transition-all
+              ${isDragActive ? "border-emerald-400 bg-emerald-50/50 scale-[1.02]" : "border-gray-200 bg-gray-50/30 hover:border-gray-300 hover:bg-gray-50/60"}
+              ${disabled ? "pointer-events-none opacity-50" : ""}
+            `}
+          >
+            <div className="flex flex-col items-center gap-3">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gray-100">
+                <Upload className="h-5 w-5 text-gray-400 stroke-[1.5]" />
+              </div>
+              <div>
+                <p className="text-sm font-normal text-gray-600">
+                  {isDragActive ? t("upload.dropActive") : t("upload.dropIdle")}
+                </p>
+                <p className="mt-1.5 text-xs text-gray-400 font-light">
+                  {t("upload.formats")}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Back to recording */}
+          <button
+            onClick={() => setShowUpload(false)}
+            className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-gray-600 font-light transition-colors"
+          >
+            <Mic className="h-3 w-3" />
+            {t("upload.backToRecord")}
+          </button>
+        </div>
+      ) : (
+        /* ---- Default: Voice recording (primary) ---- */
+        <div className="flex flex-col items-center">
+          <AudioRecorderPanel
+            onRecordingComplete={handleRecordingComplete}
+            disabled={disabled}
+            selectedFile={selectedFile}
+            onClear={clearFile}
+          />
+
+          {/* Subtle divider + upload alternative */}
+          <div className="mt-8 flex items-center gap-3 text-xs text-gray-300">
+            <div className="h-px flex-1 bg-gray-100" />
+            <span className="font-light">{t("upload.or")}</span>
+            <div className="h-px flex-1 bg-gray-100" />
+          </div>
+
+          <button
+            onClick={() => setShowUpload(true)}
+            className="mt-4 flex items-center gap-1.5 text-xs text-gray-400 hover:text-gray-600 font-light transition-colors"
+          >
+            <Paperclip className="h-3 w-3" />
+            {t("upload.uploadInstead")}
+          </button>
+        </div>
+      )}
+
+      {/* Error message */}
+      {error && (
+        <p className="mt-4 text-center text-xs text-red-500 font-light">{error}</p>
       )}
     </div>
   );
@@ -302,62 +317,81 @@ function AudioRecorderPanel({
 
   return (
     <div
-      className={`rounded-xl border border-dashed p-8 text-center transition-all ${
-        state === "recording"
-          ? "border-red-300 bg-red-50/30"
-          : "border-gray-200 bg-gray-50/30"
-      } ${disabled ? "pointer-events-none opacity-50" : ""}`}
+      className={`text-center transition-all ${disabled ? "pointer-events-none opacity-50" : ""}`}
     >
-      {micError && <p className="mb-4 text-xs text-red-500 font-light">{micError}</p>}
+      {micError && (
+        <div className="mb-6 rounded-xl bg-red-50 border border-red-100 px-4 py-3">
+          <p className="text-xs text-red-500 font-light">{micError}</p>
+        </div>
+      )}
 
       {state === "idle" && (
-        <div className="flex flex-col items-center gap-4">
+        <div className="flex flex-col items-center gap-5">
+          {/* Big friendly record button */}
           <button
             onClick={startRecording}
-            className="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-50 text-emerald-500 transition-all hover:bg-emerald-100 hover:scale-105"
+            className="group flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-b from-emerald-400 to-emerald-500 text-white shadow-lg shadow-emerald-500/20 transition-all hover:shadow-xl hover:shadow-emerald-500/30 hover:scale-105 active:scale-95"
           >
-            <Mic className="h-7 w-7 stroke-[1.5]" />
+            <Mic className="h-9 w-9 stroke-[1.5] transition-transform group-hover:scale-110" />
           </button>
-          <p className="text-sm text-gray-400 font-light">
-            {t("recorder.startRecording")}
-          </p>
+          <div className="text-center">
+            <p className="text-base font-normal text-gray-700">
+              {t("recorder.tapToRecord")}
+            </p>
+            <p className="mt-1 text-xs text-gray-400 font-light">
+              {t("recorder.describeRequest")}
+            </p>
+          </div>
         </div>
       )}
 
       {state === "recording" && (
-        <div className="flex flex-col items-center gap-4">
+        <div className="flex flex-col items-center gap-5">
+          {/* Pulsing recording indicator */}
           <div className="relative">
-            <div className="absolute inset-0 rounded-full border-2 border-red-200 animate-ping opacity-30 pointer-events-none" />
+            <div className="absolute -inset-3 rounded-full bg-red-100 animate-pulse pointer-events-none" />
+            <div className="absolute -inset-6 rounded-full bg-red-50 animate-pulse pointer-events-none" style={{ animationDelay: "150ms" }} />
             <button
               onClick={stopRecording}
-              className="relative z-10 flex h-16 w-16 items-center justify-center rounded-full bg-red-50 text-red-500 transition-all hover:bg-red-100 hover:scale-105 cursor-pointer"
+              className="relative z-10 flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-b from-red-400 to-red-500 text-white shadow-lg shadow-red-500/20 transition-all hover:scale-105 active:scale-95 cursor-pointer"
             >
-              <Square className="h-5 w-5 fill-current" />
+              <Square className="h-7 w-7 fill-current" />
             </button>
           </div>
-          <p className="text-lg font-mono font-light text-red-500 tracking-wider">
-            {formatTime(duration)}
-          </p>
+
+          {/* Timer */}
+          <div className="text-center">
+            <p className="text-2xl font-mono font-light text-gray-900 tracking-widest tabular-nums">
+              {formatTime(duration)}
+            </p>
+            <p className="mt-1 text-xs text-red-400 font-light animate-pulse">
+              {t("recorder.recording")}
+            </p>
+          </div>
+
+          {/* Prominent stop button */}
           <button
             onClick={stopRecording}
-            className="flex items-center gap-2 rounded-lg bg-red-500 px-5 py-2 text-sm font-normal text-white transition-all hover:bg-red-600 cursor-pointer"
+            className="flex items-center gap-2 rounded-full bg-gray-900 px-6 py-2.5 text-sm font-normal text-white transition-all hover:bg-gray-800 active:scale-95 cursor-pointer shadow-sm"
           >
-            <Square className="h-3.5 w-3.5 fill-current" />
-            {t("recorder.stopRecording")}
+            <Square className="h-3 w-3 fill-current" />
+            {t("recorder.tapToStop")}
           </button>
         </div>
       )}
 
       {state === "recorded" && (
         <div className="flex flex-col items-center gap-4">
-          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-50">
-            <Check className="h-6 w-6 text-emerald-500 stroke-[1.5]" />
+          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-50 ring-4 ring-emerald-50/50">
+            <Check className="h-7 w-7 text-emerald-500 stroke-[1.5]" />
           </div>
-          {audioUrl && <audio controls src={audioUrl} className="w-full max-w-xs" />}
-          <p className="text-xs text-gray-400 font-light">{formatTime(duration)}</p>
+          {audioUrl && (
+            <audio controls src={audioUrl} className="w-full max-w-xs rounded-lg" />
+          )}
+          <p className="text-xs text-gray-400 font-light">{t("recorder.duration")}: {formatTime(duration)}</p>
           <button
             onClick={reRecord}
-            className="flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-4 py-2 text-xs font-normal text-gray-500 hover:bg-gray-50 transition-colors"
+            className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-gray-600 font-light transition-colors"
           >
             <RotateCcw className="h-3 w-3" />
             {t("recorder.reRecord")}
