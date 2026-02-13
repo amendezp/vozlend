@@ -27,26 +27,26 @@ export function ReportHeader({
     approve: {
       icon: CheckCircle,
       label: t("reportHeader.approved"),
-      bgClass: "bg-emerald-50 border-emerald-200",
-      textClass: "text-emerald-700",
-      iconClass: "text-emerald-500",
-      badgeClass: "bg-emerald-100 text-emerald-800",
+      bgClass: "bg-emerald-50/50 border-emerald-100",
+      textClass: "text-emerald-600",
+      iconClass: "text-emerald-400",
+      badgeClass: "bg-emerald-100 text-emerald-700",
     },
     decline: {
       icon: XCircle,
       label: t("reportHeader.declined"),
-      bgClass: "bg-red-50 border-red-200",
-      textClass: "text-red-700",
-      iconClass: "text-red-500",
-      badgeClass: "bg-red-100 text-red-800",
+      bgClass: "bg-red-50/50 border-red-100",
+      textClass: "text-red-600",
+      iconClass: "text-red-400",
+      badgeClass: "bg-red-100 text-red-700",
     },
     request_more_info: {
       icon: HelpCircle,
       label: t("reportHeader.moreInfo"),
-      bgClass: "bg-amber-50 border-amber-200",
-      textClass: "text-amber-700",
-      iconClass: "text-amber-500",
-      badgeClass: "bg-amber-100 text-amber-800",
+      bgClass: "bg-amber-50/50 border-amber-100",
+      textClass: "text-amber-600",
+      iconClass: "text-amber-400",
+      badgeClass: "bg-amber-100 text-amber-700",
     },
   };
 
@@ -54,39 +54,33 @@ export function ReportHeader({
   const Icon = config.icon;
 
   return (
-    <div className={`rounded-2xl border ${config.bgClass} p-6 md:p-8`}>
+    <div className={`rounded-xl border ${config.bgClass} p-6 md:p-8`}>
       <div className="flex flex-col items-center gap-4 md:flex-row md:items-start md:gap-6">
-        {/* Icon */}
         <div className="shrink-0">
-          <Icon className={`h-16 w-16 ${config.iconClass}`} />
+          <Icon className={`h-12 w-12 ${config.iconClass} stroke-[1.5]`} />
         </div>
 
-        {/* Content */}
         <div className="flex-1 text-center md:text-left">
-          {/* Decision Badge */}
           <span
-            className={`inline-flex items-center rounded-full px-4 py-1.5 text-sm font-bold ${config.badgeClass}`}
+            className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-normal tracking-wide ${config.badgeClass}`}
           >
             {config.label}
           </span>
 
-          {/* Applicant + Amount */}
-          <h1 className="mt-3 text-2xl font-bold text-gray-900 md:text-3xl">
+          <h1 className="mt-3 text-2xl font-light text-gray-900 md:text-3xl tracking-tight">
             {applicantName || t("reportHeader.applicant")} &mdash;{" "}
             {amount
               ? `${currency} ${amount.toLocaleString()}`
               : t("reportHeader.amountNotSpecified")}
           </h1>
 
-          {/* Summary */}
-          <p className={`mt-2 text-base ${config.textClass}`}>
+          <p className={`mt-2 text-sm font-light ${config.textClass}`}>
             {decisionSummary}
           </p>
 
-          {/* Weighted Score */}
-          <div className="mt-4 inline-flex items-center gap-2 rounded-lg bg-white/80 px-3 py-1.5 text-sm">
-            <span className="font-medium text-gray-600">{t("reportHeader.weightedScore")}:</span>
-            <span className="text-lg font-bold text-gray-900">
+          <div className="mt-4 inline-flex items-center gap-2 rounded-lg bg-white/80 px-3 py-1.5 text-xs">
+            <span className="text-gray-400">{t("reportHeader.weightedScore")}:</span>
+            <span className="text-base font-medium text-gray-900">
               {weightedScore.toFixed(1)}/10
             </span>
           </div>

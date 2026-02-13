@@ -45,11 +45,11 @@ export function ProcessingStatus({
   ];
 
   return (
-    <div className="mx-auto max-w-md">
-      <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+    <div className="mx-auto max-w-sm">
+      <div className="rounded-xl border border-gray-100 bg-white p-6">
         {/* Header */}
         <div className="mb-6 text-center">
-          <h3 className="text-lg font-semibold text-gray-900">
+          <h3 className="text-base font-medium text-gray-900">
             {isComplete
               ? t("processing.complete")
               : isError
@@ -57,7 +57,7 @@ export function ProcessingStatus({
                 : t("processing.analyzing")}
           </h3>
           {message && (
-            <p className="mt-1 text-sm text-gray-500">{message}</p>
+            <p className="mt-1 text-xs text-gray-400 font-light">{message}</p>
           )}
         </div>
 
@@ -68,66 +68,57 @@ export function ProcessingStatus({
             const Icon = step.icon;
 
             return (
-              <div key={step.key} className="flex items-center gap-4">
-                {/* Icon */}
+              <div key={step.key} className="flex items-center gap-3">
                 <div
-                  className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full transition-colors ${
+                  className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full transition-colors ${
                     state === "done"
-                      ? "bg-emerald-100 text-emerald-600"
+                      ? "bg-emerald-50 text-emerald-500"
                       : state === "active"
                         ? isError
-                          ? "bg-red-100 text-red-600"
-                          : "bg-emerald-50 text-emerald-500"
-                        : "bg-gray-100 text-gray-400"
+                          ? "bg-red-50 text-red-500"
+                          : "bg-gray-50 text-gray-600"
+                        : "bg-gray-50 text-gray-300"
                   }`}
                 >
                   {state === "done" ? (
-                    <CheckCircle className="h-5 w-5" />
+                    <CheckCircle className="h-4 w-4 stroke-[1.5]" />
                   ) : state === "active" && !isError ? (
-                    <Loader2 className="h-5 w-5 animate-spin" />
+                    <Loader2 className="h-4 w-4 animate-spin stroke-[1.5]" />
                   ) : state === "active" && isError ? (
-                    <AlertCircle className="h-5 w-5" />
+                    <AlertCircle className="h-4 w-4 stroke-[1.5]" />
                   ) : (
-                    <Icon className="h-5 w-5" />
+                    <Icon className="h-4 w-4 stroke-[1.5]" />
                   )}
                 </div>
 
-                {/* Label */}
-                <div className="flex-1">
-                  <p
-                    className={`text-sm font-medium ${
-                      state === "done"
-                        ? "text-emerald-700"
-                        : state === "active"
-                          ? isError
-                            ? "text-red-700"
-                            : "text-gray-900"
-                          : "text-gray-400"
-                    }`}
-                  >
-                    {step.label}
-                  </p>
-                </div>
+                <p
+                  className={`text-sm ${
+                    state === "done"
+                      ? "text-emerald-600"
+                      : state === "active"
+                        ? isError
+                          ? "text-red-600"
+                          : "text-gray-900 font-normal"
+                        : "text-gray-300"
+                  } font-light`}
+                >
+                  {step.label}
+                </p>
 
-                {/* Connector line (except last) */}
-                {idx < steps.length - 1 && (
-                  <div className="hidden" />
-                )}
+                {idx < steps.length - 1 && <div className="hidden" />}
               </div>
             );
           })}
         </div>
 
-        {/* Error details */}
         {isError && errorMessage && (
-          <div className="mt-4 rounded-lg bg-red-50 p-3 text-sm text-red-700">
+          <div className="mt-4 rounded-lg bg-red-50 p-3 text-xs text-red-600 font-light">
             {errorMessage}
           </div>
         )}
 
-        {/* Completion indicator */}
         {isComplete && (
-          <div className="mt-4 rounded-lg bg-emerald-50 p-3 text-center text-sm font-medium text-emerald-700">
+          <div className="mt-4 rounded-lg bg-emerald-50 p-3 text-center text-xs font-normal text-emerald-600">
             {t("processing.reportReady")}
           </div>
         )}

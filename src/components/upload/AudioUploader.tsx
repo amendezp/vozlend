@@ -82,27 +82,27 @@ export function AudioUploader({
   return (
     <div className="mx-auto max-w-lg">
       {/* Tab Toggle */}
-      <div className="mb-6 flex rounded-xl bg-gray-100 p-1">
+      <div className="mb-6 flex rounded-lg bg-gray-50 p-1">
         <button
           onClick={() => setActiveTab("upload")}
-          className={`flex-1 rounded-lg px-4 py-2.5 text-sm font-medium transition-all ${
+          className={`flex-1 rounded-md px-4 py-2 text-sm transition-all ${
             activeTab === "upload"
-              ? "bg-white text-gray-900 shadow-sm"
-              : "text-gray-500 hover:text-gray-700"
+              ? "bg-white text-gray-900 shadow-sm font-normal"
+              : "text-gray-400 hover:text-gray-600 font-light"
           }`}
         >
-          <Upload className="mr-2 inline-block h-4 w-4" />
+          <Upload className="mr-2 inline-block h-3.5 w-3.5" />
           {t("upload.tabUpload")}
         </button>
         <button
           onClick={() => setActiveTab("record")}
-          className={`flex-1 rounded-lg px-4 py-2.5 text-sm font-medium transition-all ${
+          className={`flex-1 rounded-md px-4 py-2 text-sm transition-all ${
             activeTab === "record"
-              ? "bg-white text-gray-900 shadow-sm"
-              : "text-gray-500 hover:text-gray-700"
+              ? "bg-white text-gray-900 shadow-sm font-normal"
+              : "text-gray-400 hover:text-gray-600 font-light"
           }`}
         >
-          <Mic className="mr-2 inline-block h-4 w-4" />
+          <Mic className="mr-2 inline-block h-3.5 w-3.5" />
           {t("upload.tabRecord")}
         </button>
       </div>
@@ -112,8 +112,8 @@ export function AudioUploader({
           {/* Drop zone */}
           <div
             {...getRootProps()}
-            className={`relative cursor-pointer rounded-2xl border-2 border-dashed p-8 text-center transition-all
-              ${isDragActive ? "border-emerald-500 bg-emerald-50" : "border-gray-300 bg-gray-50/50 hover:border-emerald-400 hover:bg-emerald-50/50"}
+            className={`relative cursor-pointer rounded-xl border border-dashed p-8 text-center transition-all
+              ${isDragActive ? "border-emerald-400 bg-emerald-50/50" : "border-gray-200 bg-gray-50/30 hover:border-gray-300 hover:bg-gray-50/50"}
               ${disabled ? "pointer-events-none opacity-50" : ""}
             `}
           >
@@ -121,12 +121,12 @@ export function AudioUploader({
 
             {selectedFile ? (
               <div className="flex flex-col items-center gap-3">
-                <div className="flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100">
-                  <FileAudio className="h-7 w-7 text-emerald-600" />
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-50">
+                  <FileAudio className="h-6 w-6 text-emerald-500 stroke-[1.5]" />
                 </div>
                 <div>
-                  <p className="font-medium text-gray-900">{selectedFile.name}</p>
-                  <p className="text-sm text-gray-500">
+                  <p className="font-normal text-sm text-gray-900">{selectedFile.name}</p>
+                  <p className="text-xs text-gray-400 font-light">
                     {(selectedFile.size / 1024 / 1024).toFixed(2)} MB
                   </p>
                 </div>
@@ -135,22 +135,22 @@ export function AudioUploader({
                     e.stopPropagation();
                     clearFile();
                   }}
-                  className="flex items-center gap-1 text-sm text-gray-400 hover:text-red-500"
+                  className="flex items-center gap-1 text-xs text-gray-400 hover:text-red-500 font-light"
                 >
-                  <X className="h-3.5 w-3.5" />
+                  <X className="h-3 w-3" />
                   {t("upload.remove")}
                 </button>
               </div>
             ) : (
               <div className="flex flex-col items-center gap-3">
-                <div className="flex h-14 w-14 items-center justify-center rounded-full bg-gray-100">
-                  <Upload className="h-7 w-7 text-gray-400" />
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gray-50">
+                  <Upload className="h-6 w-6 text-gray-300 stroke-[1.5]" />
                 </div>
                 <div>
-                  <p className="font-medium text-gray-700">
+                  <p className="text-sm font-normal text-gray-600">
                     {isDragActive ? t("upload.dropActive") : t("upload.dropIdle")}
                   </p>
-                  <p className="mt-1 text-sm text-gray-400">
+                  <p className="mt-1 text-xs text-gray-400 font-light">
                     {t("upload.formats")}
                   </p>
                 </div>
@@ -159,7 +159,6 @@ export function AudioUploader({
           </div>
         </>
       ) : (
-        /* Record tab — AudioRecorder */
         <AudioRecorderPanel
           onRecordingComplete={handleRecordingComplete}
           disabled={disabled}
@@ -170,7 +169,7 @@ export function AudioUploader({
 
       {/* Error message */}
       {error && (
-        <p className="mt-3 text-center text-sm text-red-500">{error}</p>
+        <p className="mt-3 text-center text-xs text-red-500 font-light">{error}</p>
       )}
 
       {/* Analyze button */}
@@ -180,7 +179,7 @@ export function AudioUploader({
             size="lg"
             onClick={onStartProcessing}
             disabled={disabled}
-            className="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-3 text-base font-semibold rounded-xl shadow-lg shadow-emerald-200 transition-all hover:shadow-xl hover:shadow-emerald-300"
+            className="bg-gray-900 hover:bg-gray-800 text-white px-8 py-3 text-sm font-normal rounded-lg transition-all"
           >
             {t("upload.analyzeButton")}
           </Button>
@@ -215,7 +214,6 @@ function AudioRecorderPanel({
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
 
-  // Cleanup on unmount
   useEffect(() => {
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
@@ -227,11 +225,7 @@ function AudioRecorderPanel({
   }, []);
 
   function getSupportedMimeType(): string {
-    const types = [
-      "audio/webm;codecs=opus",
-      "audio/webm",
-      "audio/mp4",
-    ];
+    const types = ["audio/webm;codecs=opus", "audio/webm", "audio/mp4"];
     for (const type of types) {
       if (MediaRecorder.isTypeSupported(type)) return type;
     }
@@ -240,8 +234,6 @@ function AudioRecorderPanel({
 
   const startRecording = async () => {
     setMicError(null);
-
-    // Check HTTPS
     if (
       typeof window !== "undefined" &&
       window.location.protocol !== "https:" &&
@@ -254,7 +246,6 @@ function AudioRecorderPanel({
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       streamRef.current = stream;
-
       const mimeType = getSupportedMimeType();
       const recorder = new MediaRecorder(stream, { mimeType });
       mediaRecorderRef.current = recorder;
@@ -267,29 +258,19 @@ function AudioRecorderPanel({
       recorder.onstop = () => {
         const blob = new Blob(chunksRef.current, { type: mimeType });
         const ext = mimeType.includes("mp4") ? "m4a" : "webm";
-        const file = new File(
-          [blob],
-          `recording-${Date.now()}.${ext}`,
-          { type: mimeType }
-        );
-
+        const file = new File([blob], `recording-${Date.now()}.${ext}`, { type: mimeType });
         const url = URL.createObjectURL(blob);
         if (audioUrl) URL.revokeObjectURL(audioUrl);
         setAudioUrl(url);
         setState("recorded");
         onRecordingComplete(file);
-
-        // Stop all tracks
         stream.getTracks().forEach((track) => track.stop());
       };
 
       recorder.start(1000);
       setState("recording");
       setDuration(0);
-
-      timerRef.current = setInterval(() => {
-        setDuration((d) => d + 1);
-      }, 1000);
+      timerRef.current = setInterval(() => setDuration((d) => d + 1), 1000);
     } catch {
       setMicError(t("recorder.micDenied"));
     }
@@ -321,25 +302,23 @@ function AudioRecorderPanel({
 
   return (
     <div
-      className={`rounded-2xl border-2 border-dashed p-8 text-center transition-all ${
+      className={`rounded-xl border border-dashed p-8 text-center transition-all ${
         state === "recording"
-          ? "border-red-400 bg-red-50/50"
-          : "border-gray-300 bg-gray-50/50"
+          ? "border-red-300 bg-red-50/30"
+          : "border-gray-200 bg-gray-50/30"
       } ${disabled ? "pointer-events-none opacity-50" : ""}`}
     >
-      {micError && (
-        <p className="mb-4 text-sm text-red-500">{micError}</p>
-      )}
+      {micError && <p className="mb-4 text-xs text-red-500 font-light">{micError}</p>}
 
       {state === "idle" && (
         <div className="flex flex-col items-center gap-4">
           <button
             onClick={startRecording}
-            className="flex h-20 w-20 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 transition-all hover:bg-emerald-200 hover:scale-105"
+            className="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-50 text-emerald-500 transition-all hover:bg-emerald-100 hover:scale-105"
           >
-            <Mic className="h-8 w-8" />
+            <Mic className="h-7 w-7 stroke-[1.5]" />
           </button>
-          <p className="text-sm font-medium text-gray-600">
+          <p className="text-sm text-gray-400 font-light">
             {t("recorder.startRecording")}
           </p>
         </div>
@@ -348,23 +327,22 @@ function AudioRecorderPanel({
       {state === "recording" && (
         <div className="flex flex-col items-center gap-4">
           <div className="relative">
-            {/* Pulsing ring — behind button, pointer-events disabled */}
-            <div className="absolute inset-0 rounded-full border-4 border-red-300 animate-ping opacity-30 pointer-events-none" />
+            <div className="absolute inset-0 rounded-full border-2 border-red-200 animate-ping opacity-30 pointer-events-none" />
             <button
               onClick={stopRecording}
-              className="relative z-10 flex h-20 w-20 items-center justify-center rounded-full bg-red-100 text-red-600 transition-all hover:bg-red-200 hover:scale-105 cursor-pointer"
+              className="relative z-10 flex h-16 w-16 items-center justify-center rounded-full bg-red-50 text-red-500 transition-all hover:bg-red-100 hover:scale-105 cursor-pointer"
             >
-              <Square className="h-6 w-6 fill-current" />
+              <Square className="h-5 w-5 fill-current" />
             </button>
           </div>
-          <p className="text-lg font-mono font-bold text-red-600">
+          <p className="text-lg font-mono font-light text-red-500 tracking-wider">
             {formatTime(duration)}
           </p>
           <button
             onClick={stopRecording}
-            className="flex items-center gap-2 rounded-xl bg-red-600 px-6 py-2.5 text-sm font-semibold text-white shadow-lg shadow-red-200 transition-all hover:bg-red-700 hover:shadow-xl hover:shadow-red-300 cursor-pointer"
+            className="flex items-center gap-2 rounded-lg bg-red-500 px-5 py-2 text-sm font-normal text-white transition-all hover:bg-red-600 cursor-pointer"
           >
-            <Square className="h-4 w-4 fill-current" />
+            <Square className="h-3.5 w-3.5 fill-current" />
             {t("recorder.stopRecording")}
           </button>
         </div>
@@ -372,22 +350,18 @@ function AudioRecorderPanel({
 
       {state === "recorded" && (
         <div className="flex flex-col items-center gap-4">
-          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100">
-            <Check className="h-7 w-7 text-emerald-600" />
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-50">
+            <Check className="h-6 w-6 text-emerald-500 stroke-[1.5]" />
           </div>
-          {audioUrl && (
-            <audio controls src={audioUrl} className="w-full max-w-xs" />
-          )}
-          <p className="text-sm text-gray-500">{formatTime(duration)}</p>
-          <div className="flex gap-3">
-            <button
-              onClick={reRecord}
-              className="flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors"
-            >
-              <RotateCcw className="h-3.5 w-3.5" />
-              {t("recorder.reRecord")}
-            </button>
-          </div>
+          {audioUrl && <audio controls src={audioUrl} className="w-full max-w-xs" />}
+          <p className="text-xs text-gray-400 font-light">{formatTime(duration)}</p>
+          <button
+            onClick={reRecord}
+            className="flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-4 py-2 text-xs font-normal text-gray-500 hover:bg-gray-50 transition-colors"
+          >
+            <RotateCcw className="h-3 w-3" />
+            {t("recorder.reRecord")}
+          </button>
         </div>
       )}
     </div>

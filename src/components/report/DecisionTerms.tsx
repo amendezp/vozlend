@@ -20,8 +20,8 @@ export function DecisionTerms({ decision, terms }: DecisionTermsProps) {
   const { t } = useLanguage();
 
   return (
-    <div className="rounded-2xl border border-gray-200 bg-white p-6">
-      <h2 className="text-lg font-bold text-gray-900">
+    <div className="rounded-xl border border-gray-100 bg-white p-6">
+      <h2 className="text-base font-medium text-gray-900">
         {decision === "approve"
           ? t("decisionTerms.approvedTerms")
           : decision === "decline"
@@ -29,39 +29,38 @@ export function DecisionTerms({ decision, terms }: DecisionTermsProps) {
             : t("decisionTerms.infoRequested")}
       </h2>
 
-      {/* Approval Terms */}
       {decision === "approve" && (
         <div className="mt-4 space-y-4">
-          <div className="grid gap-4 sm:grid-cols-3">
+          <div className="grid gap-3 sm:grid-cols-3">
             {terms.approved_amount && (
-              <div className="rounded-xl bg-emerald-50 p-4">
-                <div className="flex items-center gap-2 text-sm text-emerald-600">
-                  <Banknote className="h-4 w-4" />
+              <div className="rounded-lg bg-emerald-50/50 p-3">
+                <div className="flex items-center gap-1.5 text-xs text-emerald-500">
+                  <Banknote className="h-3.5 w-3.5 stroke-[1.5]" />
                   {t("decisionTerms.approvedAmount")}
                 </div>
-                <p className="mt-1 text-xl font-bold text-gray-900">
+                <p className="mt-1 text-lg font-medium text-gray-900">
                   {terms.currency} {terms.approved_amount.toLocaleString()}
                 </p>
               </div>
             )}
             {terms.suggested_interest_rate && (
-              <div className="rounded-xl bg-blue-50 p-4">
-                <div className="flex items-center gap-2 text-sm text-blue-600">
-                  <Percent className="h-4 w-4" />
+              <div className="rounded-lg bg-blue-50/50 p-3">
+                <div className="flex items-center gap-1.5 text-xs text-blue-500">
+                  <Percent className="h-3.5 w-3.5 stroke-[1.5]" />
                   {t("decisionTerms.interestRate")}
                 </div>
-                <p className="mt-1 text-xl font-bold text-gray-900">
+                <p className="mt-1 text-lg font-medium text-gray-900">
                   {terms.suggested_interest_rate}
                 </p>
               </div>
             )}
             {terms.suggested_term && (
-              <div className="rounded-xl bg-purple-50 p-4">
-                <div className="flex items-center gap-2 text-sm text-purple-600">
-                  <Calendar className="h-4 w-4" />
+              <div className="rounded-lg bg-purple-50/50 p-3">
+                <div className="flex items-center gap-1.5 text-xs text-purple-500">
+                  <Calendar className="h-3.5 w-3.5 stroke-[1.5]" />
                   {t("decisionTerms.loanTerm")}
                 </div>
-                <p className="mt-1 text-xl font-bold text-gray-900">
+                <p className="mt-1 text-lg font-medium text-gray-900">
                   {terms.suggested_term}
                 </p>
               </div>
@@ -70,11 +69,11 @@ export function DecisionTerms({ decision, terms }: DecisionTermsProps) {
 
           {terms.conditions.length > 0 && (
             <div>
-              <h3 className="text-sm font-semibold text-gray-700">{t("decisionTerms.conditions")}</h3>
+              <h3 className="text-xs font-normal text-gray-500">{t("decisionTerms.conditions")}</h3>
               <ul className="mt-2 space-y-1.5">
                 {terms.conditions.map((c, i) => (
-                  <li key={i} className="flex items-start gap-2 text-sm text-gray-600">
-                    <CheckCircle className="mt-0.5 h-4 w-4 shrink-0 text-emerald-500" />
+                  <li key={i} className="flex items-start gap-2 text-sm text-gray-500 font-light">
+                    <CheckCircle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-emerald-400 stroke-[1.5]" />
                     {c}
                   </li>
                 ))}
@@ -84,13 +83,12 @@ export function DecisionTerms({ decision, terms }: DecisionTermsProps) {
         </div>
       )}
 
-      {/* Decline Reasons */}
       {decision === "decline" && terms.decline_reasons.length > 0 && (
         <div className="mt-4">
           <ul className="space-y-2">
             {terms.decline_reasons.map((r, i) => (
-              <li key={i} className="flex items-start gap-2 text-sm text-gray-700">
-                <XCircle className="mt-0.5 h-4 w-4 shrink-0 text-red-500" />
+              <li key={i} className="flex items-start gap-2 text-sm text-gray-500 font-light">
+                <XCircle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-red-400 stroke-[1.5]" />
                 {r}
               </li>
             ))}
@@ -98,16 +96,15 @@ export function DecisionTerms({ decision, terms }: DecisionTermsProps) {
         </div>
       )}
 
-      {/* Additional Questions (Request More Info) */}
       {decision === "request_more_info" && terms.additional_questions.length > 0 && (
         <div className="mt-4">
-          <p className="text-sm text-gray-600 mb-3">
+          <p className="text-sm text-gray-400 mb-3 font-light">
             {t("decisionTerms.moreInfoDesc")}
           </p>
           <ul className="space-y-2">
             {terms.additional_questions.map((q, i) => (
-              <li key={i} className="flex items-start gap-2 text-sm text-gray-700">
-                <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-500" />
+              <li key={i} className="flex items-start gap-2 text-sm text-gray-500 font-light">
+                <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-amber-400 stroke-[1.5]" />
                 {q}
               </li>
             ))}

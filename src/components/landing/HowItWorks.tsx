@@ -11,54 +11,45 @@ export function HowItWorks() {
       icon: Mic,
       title: t("howItWorks.step1Title"),
       description: t("howItWorks.step1Desc"),
-      color: "text-blue-600",
-      bg: "bg-blue-50",
-      border: "border-blue-200",
     },
     {
       icon: FileText,
       title: t("howItWorks.step2Title"),
       description: t("howItWorks.step2Desc"),
-      color: "text-amber-600",
-      bg: "bg-amber-50",
-      border: "border-amber-200",
     },
     {
       icon: CheckCircle,
       title: t("howItWorks.step3Title"),
       description: t("howItWorks.step3Desc"),
-      color: "text-emerald-600",
-      bg: "bg-emerald-50",
-      border: "border-emerald-200",
     },
   ];
 
   return (
-    <section className="py-16 md:py-24">
+    <section className="py-16 md:py-24 border-t border-gray-100">
       <div className="mx-auto max-w-5xl px-6">
-        <h2 className="text-center text-2xl font-bold text-gray-900 sm:text-3xl">
+        <h2 className="text-center text-2xl font-light text-gray-900 sm:text-3xl tracking-tight">
           {t("howItWorks.title")}
         </h2>
-        <p className="mx-auto mt-3 max-w-xl text-center text-gray-600">
+        <p className="mx-auto mt-3 max-w-xl text-center text-sm text-gray-400 font-light">
           {t("howItWorks.subtitle")}
         </p>
 
-        <div className="mt-12 grid gap-8 md:grid-cols-3">
+        <div className="mt-14 grid gap-8 md:grid-cols-3">
           {steps.map((step, i) => (
             <div
               key={i}
-              className={`relative rounded-2xl border ${step.border} ${step.bg} p-6 transition-shadow hover:shadow-lg`}
+              className="relative rounded-xl border border-gray-100 bg-white p-6 transition-shadow hover:shadow-sm"
             >
               {/* Step number */}
-              <div className="absolute -top-3 -left-3 flex h-8 w-8 items-center justify-center rounded-full bg-white text-sm font-bold text-gray-900 shadow-md">
+              <div className="absolute -top-3 -left-3 flex h-7 w-7 items-center justify-center rounded-full bg-gray-900 text-xs font-normal text-white">
                 {i + 1}
               </div>
 
-              <step.icon className={`h-10 w-10 ${step.color}`} />
-              <h3 className="mt-4 text-lg font-semibold text-gray-900">
+              <step.icon className="h-8 w-8 text-gray-300 stroke-[1.5]" />
+              <h3 className="mt-4 text-base font-medium text-gray-900">
                 {step.title}
               </h3>
-              <p className="mt-2 text-sm leading-relaxed text-gray-600">
+              <p className="mt-2 text-sm leading-relaxed text-gray-400 font-light">
                 {step.description}
               </p>
             </div>
