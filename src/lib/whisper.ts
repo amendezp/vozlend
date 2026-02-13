@@ -25,7 +25,10 @@ export async function transcribeAudio(
   };
   const mimeType = mimeTypes[ext] || "audio/ogg";
 
-  const file = new File([new Uint8Array(audioBuffer)], fileName, { type: mimeType });
+  // Whisper API doesn't accept .opus — rename to .ogg (same codec, accepted extension)
+  const apiFileName = ext === "opus" ? fileName.replace(/\.opus$/i, ".ogg") : fileName;
+
+  const file = new File([new Uint8Array(audioBuffer)], apiFileName, { type: mimeType });
 
   const transcription = await openai.audio.transcriptions.create({
     model: "whisper-1",
