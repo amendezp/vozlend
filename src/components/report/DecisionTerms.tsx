@@ -8,6 +8,7 @@ import {
   Calendar,
   Banknote,
 } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
 import type { Decision, Terms } from "@/types";
 
 interface DecisionTermsProps {
@@ -16,14 +17,16 @@ interface DecisionTermsProps {
 }
 
 export function DecisionTerms({ decision, terms }: DecisionTermsProps) {
+  const { t } = useLanguage();
+
   return (
     <div className="rounded-2xl border border-gray-200 bg-white p-6">
       <h2 className="text-lg font-bold text-gray-900">
         {decision === "approve"
-          ? "Approved Terms"
+          ? t("decisionTerms.approvedTerms")
           : decision === "decline"
-            ? "Decline Reasons"
-            : "Information Requested"}
+            ? t("decisionTerms.declineReasons")
+            : t("decisionTerms.infoRequested")}
       </h2>
 
       {/* Approval Terms */}
@@ -34,7 +37,7 @@ export function DecisionTerms({ decision, terms }: DecisionTermsProps) {
               <div className="rounded-xl bg-emerald-50 p-4">
                 <div className="flex items-center gap-2 text-sm text-emerald-600">
                   <Banknote className="h-4 w-4" />
-                  Approved Amount
+                  {t("decisionTerms.approvedAmount")}
                 </div>
                 <p className="mt-1 text-xl font-bold text-gray-900">
                   {terms.currency} {terms.approved_amount.toLocaleString()}
@@ -45,7 +48,7 @@ export function DecisionTerms({ decision, terms }: DecisionTermsProps) {
               <div className="rounded-xl bg-blue-50 p-4">
                 <div className="flex items-center gap-2 text-sm text-blue-600">
                   <Percent className="h-4 w-4" />
-                  Interest Rate
+                  {t("decisionTerms.interestRate")}
                 </div>
                 <p className="mt-1 text-xl font-bold text-gray-900">
                   {terms.suggested_interest_rate}
@@ -56,7 +59,7 @@ export function DecisionTerms({ decision, terms }: DecisionTermsProps) {
               <div className="rounded-xl bg-purple-50 p-4">
                 <div className="flex items-center gap-2 text-sm text-purple-600">
                   <Calendar className="h-4 w-4" />
-                  Loan Term
+                  {t("decisionTerms.loanTerm")}
                 </div>
                 <p className="mt-1 text-xl font-bold text-gray-900">
                   {terms.suggested_term}
@@ -67,7 +70,7 @@ export function DecisionTerms({ decision, terms }: DecisionTermsProps) {
 
           {terms.conditions.length > 0 && (
             <div>
-              <h3 className="text-sm font-semibold text-gray-700">Conditions</h3>
+              <h3 className="text-sm font-semibold text-gray-700">{t("decisionTerms.conditions")}</h3>
               <ul className="mt-2 space-y-1.5">
                 {terms.conditions.map((c, i) => (
                   <li key={i} className="flex items-start gap-2 text-sm text-gray-600">
@@ -99,7 +102,7 @@ export function DecisionTerms({ decision, terms }: DecisionTermsProps) {
       {decision === "request_more_info" && terms.additional_questions.length > 0 && (
         <div className="mt-4">
           <p className="text-sm text-gray-600 mb-3">
-            We need more information to make a decision. Please provide answers to:
+            {t("decisionTerms.moreInfoDesc")}
           </p>
           <ul className="space-y-2">
             {terms.additional_questions.map((q, i) => (

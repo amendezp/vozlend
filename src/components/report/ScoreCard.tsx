@@ -1,7 +1,7 @@
 "use client";
 
+import { useLanguage } from "@/context/LanguageContext";
 import type { Scores } from "@/types";
-import { SCORE_LABELS } from "@/types";
 
 interface ScoreCardProps {
   scores: Scores;
@@ -23,14 +23,15 @@ function getScoreTextColor(score: number): string {
 }
 
 export function ScoreCard({ scores, weightedScore }: ScoreCardProps) {
+  const { t } = useLanguage();
   const scoreEntries = Object.entries(scores) as [keyof Scores, Scores[keyof Scores]][];
 
   return (
     <div className="rounded-2xl border border-gray-200 bg-white p-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-bold text-gray-900">Scorecard</h2>
+        <h2 className="text-lg font-bold text-gray-900">{t("scoreCard.title")}</h2>
         <div className="rounded-lg bg-gray-100 px-3 py-1">
-          <span className="text-sm font-medium text-gray-500">Weighted: </span>
+          <span className="text-sm font-medium text-gray-500">{t("scoreCard.weighted")}: </span>
           <span className="text-lg font-bold text-gray-900">
             {weightedScore.toFixed(1)}
           </span>
@@ -42,7 +43,7 @@ export function ScoreCard({ scores, weightedScore }: ScoreCardProps) {
           <div key={key}>
             <div className="flex items-center justify-between">
               <span className="text-sm font-medium text-gray-700">
-                {SCORE_LABELS[key]}
+                {t(`scoreDimensions.${key}`)}
               </span>
               <span
                 className={`text-sm font-bold ${getScoreTextColor(dim.score)}`}

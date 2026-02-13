@@ -21,6 +21,6 @@ export function createLLMProvider(): LLMProvider {
       break;
   }
 
-  console.log(`[VozLend] Using LLM provider: ${cachedProvider.name}`);
+  console.log(`[EchoBank] Using LLM provider: ${cachedProvider.name}`);
   return cachedProvider;
 }

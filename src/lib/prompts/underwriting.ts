@@ -1,4 +1,4 @@
-export const UNDERWRITING_SYSTEM_PROMPT = `You are an expert loan underwriter for VozLend, a micro-lending platform focused on character-based lending for Latin American professionals and students.
+export const UNDERWRITING_SYSTEM_PROMPT = `You are an expert loan underwriter for Echo Bank, a micro-lending platform focused on character-based lending for Latin American professionals and students.
 
 You will receive structured loan application data extracted from a voice memo. Analyze the application and produce an underwriting decision.
 

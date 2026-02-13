@@ -1,6 +1,7 @@
 "use client";
 
 import { AlertTriangle, CheckCircle, XCircle } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
 import type { StressTestDecision } from "@/types";
 
 interface StressTestPanelProps {
@@ -12,6 +13,7 @@ export function StressTestPanel({
   stressTest,
   parentDecision,
 }: StressTestPanelProps) {
+  const { t } = useLanguage();
   const isForced = parentDecision === "request_more_info";
   const forcedApprove = stressTest.forced_decision === "approve";
 
@@ -20,16 +22,16 @@ export function StressTestPanel({
       <div className="flex items-center gap-2">
         <AlertTriangle className="h-5 w-5 text-amber-500" />
         <h2 className="text-lg font-bold text-gray-900">
-          {isForced ? "Stress Test: Forced Decision" : "Stress Test: Alternative Scenario"}
+          {isForced ? t("stressTest.forcedTitle") : t("stressTest.altTitle")}
         </h2>
       </div>
 
       <p className="mt-2 text-sm text-gray-500">
         {isForced
-          ? "If forced to make a binary decision without additional information:"
+          ? t("stressTest.forcedDesc")
           : parentDecision === "approve"
-            ? "If this application were forced to be declined:"
-            : "If this application were forced to be approved:"}
+            ? t("stressTest.approveAltDesc")
+            : t("stressTest.declineAltDesc")}
       </p>
 
       <div className="mt-4 rounded-xl bg-white border border-gray-200 p-4">
@@ -42,7 +44,7 @@ export function StressTestPanel({
           <span
             className={`font-bold ${forcedApprove ? "text-emerald-700" : "text-red-700"}`}
           >
-            Forced {forcedApprove ? "Approval" : "Decline"}
+            {forcedApprove ? t("stressTest.forcedApproval") : t("stressTest.forcedDecline")}
           </span>
         </div>
 
@@ -54,7 +56,7 @@ export function StressTestPanel({
           <div className="mt-3 grid gap-2 sm:grid-cols-3">
             {stressTest.forced_terms.approved_amount && (
               <div className="rounded-lg bg-emerald-50 p-2 text-center">
-                <p className="text-xs text-emerald-600">Amount</p>
+                <p className="text-xs text-emerald-600">{t("stressTest.amount")}</p>
                 <p className="font-bold text-gray-900">
                   {stressTest.forced_terms.currency}{" "}
                   {stressTest.forced_terms.approved_amount.toLocaleString()}
@@ -63,7 +65,7 @@ export function StressTestPanel({
             )}
             {stressTest.forced_terms.suggested_interest_rate && (
               <div className="rounded-lg bg-blue-50 p-2 text-center">
-                <p className="text-xs text-blue-600">Rate</p>
+                <p className="text-xs text-blue-600">{t("stressTest.rate")}</p>
                 <p className="font-bold text-gray-900">
                   {stressTest.forced_terms.suggested_interest_rate}
                 </p>
@@ -71,7 +73,7 @@ export function StressTestPanel({
             )}
             {stressTest.forced_terms.suggested_term && (
               <div className="rounded-lg bg-purple-50 p-2 text-center">
-                <p className="text-xs text-purple-600">Term</p>
+                <p className="text-xs text-purple-600">{t("stressTest.term")}</p>
                 <p className="font-bold text-gray-900">
                   {stressTest.forced_terms.suggested_term}
                 </p>

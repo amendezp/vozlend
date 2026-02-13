@@ -49,7 +49,7 @@ export async function extractLoanData(
     } catch (error) {
       lastError = error as Error;
       console.warn(
-        `[VozLend] Extraction attempt ${attempt + 1} failed:`,
+        `[EchoBank] Extraction attempt ${attempt + 1} failed:`,
         (error as Error).message
       );
     }

@@ -7,10 +7,12 @@ import { HowItWorks } from "@/components/landing/HowItWorks";
 import { Footer } from "@/components/landing/Footer";
 import { AudioUploader } from "@/components/upload/AudioUploader";
 import { ProcessingStatus } from "@/components/upload/ProcessingStatus";
+import { useLanguage } from "@/context/LanguageContext";
 import { storeReport } from "@/lib/storage";
 import type { ProcessingStep, FullReport } from "@/types";
 
 export default function HomePage() {
+  const { t } = useLanguage();
   const router = useRouter();
   const [file, setFile] = useState<File | null>(null);
   const [processing, setProcessing] = useState(false);
@@ -30,7 +32,7 @@ export default function HomePage() {
     setProcessing(true);
     setCurrentStep("uploading");
     setProgress(0);
-    setStatusMessage("Preparing upload...");
+    setStatusMessage(t("processing.preparing"));
     setErrorMessage("");
 
     try {
@@ -84,7 +86,7 @@ export default function HomePage() {
               } else if (eventType === "complete") {
                 setCurrentStep("complete");
                 setProgress(1);
-                setStatusMessage("Report ready!");
+                setStatusMessage(t("processing.reportReadyShort"));
 
                 // Store report and navigate
                 const report: FullReport = data.report;
@@ -115,7 +117,7 @@ export default function HomePage() {
       );
       setProcessing(false);
     }
-  }, [file, router]);
+  }, [file, router, t]);
 
   return (
     <div className="min-h-screen bg-white">

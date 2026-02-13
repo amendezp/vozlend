@@ -5,7 +5,7 @@
 
 import type { FullReport } from "@/types";
 
-const STORAGE_PREFIX = "vozlend_report_";
+const STORAGE_PREFIX = "echobank_report_";
 
 export function storeReport(report: FullReport): void {
   if (typeof window === "undefined") return;
@@ -15,7 +15,7 @@ export function storeReport(report: FullReport): void {
       JSON.stringify(report)
     );
   } catch (e) {
-    console.warn("[VozLend] Failed to store report:", e);
+    console.warn("[EchoBank] Failed to store report:", e);
   }
 }
 
@@ -25,7 +25,7 @@ export function getReport(id: string): FullReport | null {
     const data = sessionStorage.getItem(`${STORAGE_PREFIX}${id}`);
     return data ? JSON.parse(data) : null;
   } catch (e) {
-    console.warn("[VozLend] Failed to retrieve report:", e);
+    console.warn("[EchoBank] Failed to retrieve report:", e);
     return null;
   }
 }

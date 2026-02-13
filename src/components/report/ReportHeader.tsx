@@ -1,6 +1,7 @@
 "use client";
 
 import { CheckCircle, XCircle, HelpCircle } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
 import type { Decision } from "@/types";
 
 interface ReportHeaderProps {
@@ -12,33 +13,6 @@ interface ReportHeaderProps {
   currency: string;
 }
 
-const decisionConfig = {
-  approve: {
-    icon: CheckCircle,
-    label: "Approved",
-    bgClass: "bg-emerald-50 border-emerald-200",
-    textClass: "text-emerald-700",
-    iconClass: "text-emerald-500",
-    badgeClass: "bg-emerald-100 text-emerald-800",
-  },
-  decline: {
-    icon: XCircle,
-    label: "Declined",
-    bgClass: "bg-red-50 border-red-200",
-    textClass: "text-red-700",
-    iconClass: "text-red-500",
-    badgeClass: "bg-red-100 text-red-800",
-  },
-  request_more_info: {
-    icon: HelpCircle,
-    label: "More Information Needed",
-    bgClass: "bg-amber-50 border-amber-200",
-    textClass: "text-amber-700",
-    iconClass: "text-amber-500",
-    badgeClass: "bg-amber-100 text-amber-800",
-  },
-};
-
 export function ReportHeader({
   decision,
   decisionSummary,
@@ -47,6 +21,35 @@ export function ReportHeader({
   amount,
   currency,
 }: ReportHeaderProps) {
+  const { t } = useLanguage();
+
+  const decisionConfig = {
+    approve: {
+      icon: CheckCircle,
+      label: t("reportHeader.approved"),
+      bgClass: "bg-emerald-50 border-emerald-200",
+      textClass: "text-emerald-700",
+      iconClass: "text-emerald-500",
+      badgeClass: "bg-emerald-100 text-emerald-800",
+    },
+    decline: {
+      icon: XCircle,
+      label: t("reportHeader.declined"),
+      bgClass: "bg-red-50 border-red-200",
+      textClass: "text-red-700",
+      iconClass: "text-red-500",
+      badgeClass: "bg-red-100 text-red-800",
+    },
+    request_more_info: {
+      icon: HelpCircle,
+      label: t("reportHeader.moreInfo"),
+      bgClass: "bg-amber-50 border-amber-200",
+      textClass: "text-amber-700",
+      iconClass: "text-amber-500",
+      badgeClass: "bg-amber-100 text-amber-800",
+    },
+  };
+
   const config = decisionConfig[decision];
   const Icon = config.icon;
 
@@ -69,10 +72,10 @@ export function ReportHeader({
 
           {/* Applicant + Amount */}
           <h1 className="mt-3 text-2xl font-bold text-gray-900 md:text-3xl">
-            {applicantName || "Applicant"} &mdash;{" "}
+            {applicantName || t("reportHeader.applicant")} &mdash;{" "}
             {amount
               ? `${currency} ${amount.toLocaleString()}`
-              : "Amount Not Specified"}
+              : t("reportHeader.amountNotSpecified")}
           </h1>
 
           {/* Summary */}
@@ -82,7 +85,7 @@ export function ReportHeader({
 
           {/* Weighted Score */}
           <div className="mt-4 inline-flex items-center gap-2 rounded-lg bg-white/80 px-3 py-1.5 text-sm">
-            <span className="font-medium text-gray-600">Weighted Score:</span>
+            <span className="font-medium text-gray-600">{t("reportHeader.weightedScore")}:</span>
             <span className="text-lg font-bold text-gray-900">
               {weightedScore.toFixed(1)}/10
             </span>

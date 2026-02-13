@@ -127,7 +127,7 @@ export async function POST(request: NextRequest) {
 
         controller.close();
       } catch (error) {
-        console.error("[VozLend] Pipeline error:", error);
+        console.error("[EchoBank] Pipeline error:", error);
         const message =
           error instanceof Error ? error.message : "An unexpected error occurred";
         try {

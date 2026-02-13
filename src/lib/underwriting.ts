@@ -39,7 +39,7 @@ export async function analyzeApplication(
     } catch (error) {
       lastError = error as Error;
       console.warn(
-        `[VozLend] Underwriting attempt ${attempt + 1} failed:`,
+        `[EchoBank] Underwriting attempt ${attempt + 1} failed:`,
         (error as Error).message
       );
     }

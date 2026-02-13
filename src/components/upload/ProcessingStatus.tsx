@@ -1,6 +1,7 @@
 "use client";
 
 import { Upload, AudioLines, Brain, Shield, CheckCircle, AlertCircle, Loader2 } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
 import type { ProcessingStep } from "@/types";
 
 interface ProcessingStatusProps {
@@ -9,13 +10,6 @@ interface ProcessingStatusProps {
   message?: string;
   errorMessage?: string;
 }
-
-const steps: { key: ProcessingStep; label: string; icon: typeof Upload }[] = [
-  { key: "uploading", label: "Uploading", icon: Upload },
-  { key: "transcribing", label: "Transcribing", icon: AudioLines },
-  { key: "extracting", label: "Extracting Data", icon: Brain },
-  { key: "underwriting", label: "Underwriting", icon: Shield },
-];
 
 function getStepState(
   stepKey: ProcessingStep,
@@ -26,7 +20,6 @@ function getStepState(
   const currentIdx = stepOrder.indexOf(currentStep);
 
   if (currentStep === "error") {
-    // Mark steps before the error as done, current as error
     return stepIdx < currentIdx ? "done" : stepIdx === currentIdx ? "active" : "pending";
   }
 
@@ -40,8 +33,16 @@ export function ProcessingStatus({
   message,
   errorMessage,
 }: ProcessingStatusProps) {
+  const { t } = useLanguage();
   const isError = currentStep === "error";
   const isComplete = currentStep === "complete";
+
+  const steps: { key: ProcessingStep; label: string; icon: typeof Upload }[] = [
+    { key: "uploading", label: t("processing.stepUploading"), icon: Upload },
+    { key: "transcribing", label: t("processing.stepTranscribing"), icon: AudioLines },
+    { key: "extracting", label: t("processing.stepExtracting"), icon: Brain },
+    { key: "underwriting", label: t("processing.stepUnderwriting"), icon: Shield },
+  ];
 
   return (
     <div className="mx-auto max-w-md">
@@ -50,10 +51,10 @@ export function ProcessingStatus({
         <div className="mb-6 text-center">
           <h3 className="text-lg font-semibold text-gray-900">
             {isComplete
-              ? "Analysis Complete!"
+              ? t("processing.complete")
               : isError
-                ? "Processing Error"
-                : "Analyzing Your Application..."}
+                ? t("processing.error")
+                : t("processing.analyzing")}
           </h3>
           {message && (
             <p className="mt-1 text-sm text-gray-500">{message}</p>
@@ -110,7 +111,7 @@ export function ProcessingStatus({
 
                 {/* Connector line (except last) */}
                 {idx < steps.length - 1 && (
-                  <div className="hidden" /> // Visual only via spacing
+                  <div className="hidden" />
                 )}
               </div>
             );
@@ -127,7 +128,7 @@ export function ProcessingStatus({
         {/* Completion indicator */}
         {isComplete && (
           <div className="mt-4 rounded-lg bg-emerald-50 p-3 text-center text-sm font-medium text-emerald-700">
-            Report ready! Redirecting...
+            {t("processing.reportReady")}
           </div>
         )}
       </div>

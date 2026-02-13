@@ -1,5 +1,5 @@
 // ============================================
-// VozLend — Shared TypeScript Types
+// Echo Bank — Shared TypeScript Types
 // ============================================
 
 // --- Loan Application (extracted from voice memo) ---

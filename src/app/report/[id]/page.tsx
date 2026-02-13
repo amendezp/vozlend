@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { ArrowLeft, Mic } from "lucide-react";
 import { getReport } from "@/lib/storage";
+import { useLanguage } from "@/context/LanguageContext";
 import { ReportHeader } from "@/components/report/ReportHeader";
 import { ScoreCard } from "@/components/report/ScoreCard";
 import { ExtractedDataPanel } from "@/components/report/ExtractedDataPanel";
@@ -15,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import type { FullReport } from "@/types";
 
 export default function ReportPage() {
+  const { t } = useLanguage();
   const params = useParams();
   const router = useRouter();
   const [report, setReport] = useState<FullReport | null>(null);
@@ -38,13 +40,13 @@ export default function ReportPage() {
   if (!report) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center gap-4 px-6">
-        <h1 className="text-2xl font-bold text-gray-900">Report Not Found</h1>
+        <h1 className="text-2xl font-bold text-gray-900">{t("report.notFoundTitle")}</h1>
         <p className="text-gray-500">
-          This report may have expired or the link is invalid.
+          {t("report.notFoundDesc")}
         </p>
         <Button onClick={() => router.push("/")} variant="outline">
           <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to Home
+          {t("report.backToHome")}
         </Button>
       </div>
     );
@@ -62,12 +64,12 @@ export default function ReportPage() {
             className="flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
           >
             <ArrowLeft className="h-4 w-4" />
-            Back
+            {t("report.back")}
           </button>
 
           <div className="flex items-center gap-2 text-sm font-medium text-gray-900">
             <Mic className="h-4 w-4 text-emerald-600" />
-            VozLend
+            {t("report.brand")}
           </div>
 
           <Button
@@ -75,7 +77,7 @@ export default function ReportPage() {
             size="sm"
             className="bg-emerald-600 hover:bg-emerald-700 text-white"
           >
-            Analyze Another
+            {t("report.analyzeAnother")}
           </Button>
         </div>
       </header>
@@ -124,11 +126,11 @@ export default function ReportPage() {
           {/* Footer info */}
           <div className="text-center text-xs text-gray-400 pb-8">
             <p>
-              Report ID: {report.id} | Generated:{" "}
+              {t("report.reportId")}: {report.id} | {t("report.generated")}:{" "}
               {new Date(report.createdAt).toLocaleString()}
             </p>
             <p className="mt-1">
-              VozLend &mdash; AI-Powered Voice Underwriting
+              {t("report.footerBrand")}
             </p>
           </div>
         </div>

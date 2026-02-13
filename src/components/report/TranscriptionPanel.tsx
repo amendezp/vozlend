@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { ChevronDown, ChevronUp, Languages } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
 import type { Transcription } from "@/types";
 
 interface TranscriptionPanelProps {
@@ -9,6 +10,7 @@ interface TranscriptionPanelProps {
 }
 
 export function TranscriptionPanel({ transcription }: TranscriptionPanelProps) {
+  const { t } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -19,7 +21,7 @@ export function TranscriptionPanel({ transcription }: TranscriptionPanelProps) {
       >
         <div className="flex items-center gap-2">
           <Languages className="h-5 w-5 text-gray-400" />
-          <h2 className="text-lg font-bold text-gray-900">Raw Transcription</h2>
+          <h2 className="text-lg font-bold text-gray-900">{t("transcription.title")}</h2>
         </div>
         {isOpen ? (
           <ChevronUp className="h-5 w-5 text-gray-400" />
@@ -30,9 +32,9 @@ export function TranscriptionPanel({ transcription }: TranscriptionPanelProps) {
 
       {/* Metadata */}
       <div className="mt-2 flex gap-4 text-sm text-gray-500">
-        <span>Language: {transcription.language_detected}</span>
+        <span>{t("transcription.language")}: {transcription.language_detected}</span>
         {transcription.duration && transcription.duration > 0 && (
-          <span>Duration: {Math.round(transcription.duration)}s</span>
+          <span>{t("transcription.duration")}: {Math.round(transcription.duration)}s</span>
         )}
       </div>
 
