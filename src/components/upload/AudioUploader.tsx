@@ -6,12 +6,14 @@ import { Upload, FileAudio, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const ACCEPTED_TYPES: Record<string, string[]> = {
+  "audio/opus": [".opus"],
   "audio/ogg": [".ogg", ".opus"],
   "audio/mpeg": [".mp3"],
   "audio/mp4": [".m4a"],
   "audio/x-m4a": [".m4a"],
   "audio/wav": [".wav"],
   "audio/webm": [".webm"],
+  "audio/*": [".opus", ".ogg"],
 };
 
 const MAX_SIZE = 25 * 1024 * 1024; // 25MB
