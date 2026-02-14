@@ -8,6 +8,10 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 
 export async function GET(request: NextRequest) {
+  if (!prisma) {
+    return NextResponse.json({ applications: [], pagination: { page: 1, limit: 20, total: 0, totalPages: 0 } });
+  }
+
   const session = await auth();
 
   if (!session?.user?.id) {

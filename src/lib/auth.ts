@@ -1,6 +1,7 @@
 // ============================================
 // Echo Bank — NextAuth.js v5 Configuration
 // Credentials-based auth with Prisma adapter
+// Gracefully degrades when DB is unavailable (Vercel + SQLite)
 // ============================================
 
 import NextAuth from "next-auth";
@@ -9,6 +10,8 @@ import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/db";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET,
+
   session: { strategy: "jwt" },
 
   pages: {
@@ -24,6 +27,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) {
+          return null;
+        }
+
+        // No DB available — can't authenticate
+        if (!prisma) {
           return null;
         }
 

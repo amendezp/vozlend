@@ -25,24 +25,31 @@ export async function POST(request: NextRequest) {
       };
 
       try {
-        // ---- Rate limiting ----
-        const clientIP = getClientIP(request.headers);
-        const rateCheck = await checkRateLimit(`process:${clientIP}`, {
-          maxRequests: 5,
-          windowMs: 60 * 1000, // 5 requests per minute
-        });
-
-        if (!rateCheck.allowed) {
-          send("error", {
-            message: "Too many requests. Please wait a moment before trying again.",
+        // ---- Rate limiting (skip if no DB) ----
+        if (prisma) {
+          const clientIP = getClientIP(request.headers);
+          const rateCheck = await checkRateLimit(`process:${clientIP}`, {
+            maxRequests: 5,
+            windowMs: 60 * 1000,
           });
-          controller.close();
-          return;
+
+          if (!rateCheck.allowed) {
+            send("error", {
+              message: "Too many requests. Please wait a moment before trying again.",
+            });
+            controller.close();
+            return;
+          }
         }
 
-        // ---- Get authenticated user (optional — allow anonymous for MVP) ----
-        const session = await auth();
-        const userId = session?.user?.id;
+        // ---- Get authenticated user (optional) ----
+        let userId: string | undefined;
+        try {
+          const session = await auth();
+          userId = session?.user?.id;
+        } catch {
+          // Auth may fail if secret not set — continue anonymously
+        }
 
         // ---- Step 1: Receive and validate audio ----
         send("status", {
@@ -79,27 +86,33 @@ export async function POST(request: NextRequest) {
 
         const audioBuffer = Buffer.from(await file.arrayBuffer());
 
-        // ---- Create DB record if user is authenticated ----
+        // ---- Create DB record if user is authenticated and DB available ----
         let applicationId: string | null = null;
-        if (userId) {
-          const app = await prisma.application.create({
-            data: {
-              submittedById: userId,
-              status: "processing",
-              audioFileName: file.name,
-            },
-          });
-          applicationId = app.id;
+        if (prisma && userId) {
+          try {
+            const app = await prisma.application.create({
+              data: {
+                submittedById: userId,
+                status: "processing",
+                audioFileName: file.name,
+              },
+            });
+            applicationId = app.id;
 
-          await prisma.auditLog.create({
-            data: {
-              userId,
-              action: "create_application",
-              entityType: "application",
-              entityId: app.id,
-              applicationId: app.id,
-            },
-          });
+            await prisma.auditLog.create({
+              data: {
+                userId,
+                action: "create_application",
+                entityType: "application",
+                entityId: app.id,
+                applicationId: app.id,
+              },
+            });
+          } catch (dbError) {
+            logger.warn("DB write failed, continuing without persistence", {
+              error: dbError instanceof Error ? dbError.message : String(dbError),
+            });
+          }
         }
 
         send("status", {
@@ -118,15 +131,17 @@ export async function POST(request: NextRequest) {
         const transcription = await transcribeAudio(audioBuffer, file.name);
 
         // Update DB with transcription
-        if (applicationId) {
-          await prisma.application.update({
-            where: { id: applicationId },
-            data: {
-              transcription: transcription.text,
-              audioDuration: transcription.duration,
-              audioLanguage: transcription.language,
-            },
-          });
+        if (prisma && applicationId) {
+          try {
+            await prisma.application.update({
+              where: { id: applicationId },
+              data: {
+                transcription: transcription.text,
+                audioDuration: transcription.duration,
+                audioLanguage: transcription.language,
+              },
+            });
+          } catch { /* DB write failed — continue */ }
         }
 
         send("status", {
@@ -149,17 +164,19 @@ export async function POST(request: NextRequest) {
         );
 
         // Update DB with extracted data
-        if (applicationId) {
-          await prisma.application.update({
-            where: { id: applicationId },
-            data: {
-              extractedData: JSON.stringify(application),
-              applicantName: application.applicant.name,
-              loanAmount: application.loan_request.amount_requested,
-              loanCurrency: application.loan_request.currency,
-              loanPurpose: application.loan_request.purpose,
-            },
-          });
+        if (prisma && applicationId) {
+          try {
+            await prisma.application.update({
+              where: { id: applicationId },
+              data: {
+                extractedData: JSON.stringify(application),
+                applicantName: application.applicant.name,
+                loanAmount: application.loan_request.amount_requested,
+                loanCurrency: application.loan_request.currency,
+                loanPurpose: application.loan_request.purpose,
+              },
+            });
+          } catch { /* DB write failed — continue */ }
         }
 
         send("status", {
@@ -187,16 +204,18 @@ export async function POST(request: NextRequest) {
         const reportId = applicationId || nanoid(12);
 
         // Finalize DB record
-        if (applicationId) {
-          await prisma.application.update({
-            where: { id: applicationId },
-            data: {
-              status: "completed",
-              underwritingResult: JSON.stringify(underwriting),
-              decision: underwriting.decision,
-              weightedScore: underwriting.weighted_score,
-            },
-          });
+        if (prisma && applicationId) {
+          try {
+            await prisma.application.update({
+              where: { id: applicationId },
+              data: {
+                status: "completed",
+                underwritingResult: JSON.stringify(underwriting),
+                decision: underwriting.decision,
+                weightedScore: underwriting.weighted_score,
+              },
+            });
+          } catch { /* DB write failed — continue */ }
         }
 
         const report = {

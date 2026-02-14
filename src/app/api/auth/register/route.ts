@@ -8,6 +8,13 @@ import { prisma } from "@/lib/db";
 
 export async function POST(request: NextRequest) {
   try {
+    if (!prisma) {
+      return NextResponse.json(
+        { error: "Registration is not available in this environment" },
+        { status: 503 }
+      );
+    }
+
     const body = await request.json();
     const { email, password, name } = body;
 

@@ -22,6 +22,15 @@ export async function checkRateLimit(
   const { maxRequests, windowMs } = { ...DEFAULTS, ...config };
   const now = new Date();
 
+  // No DB — allow all requests
+  if (!prisma) {
+    return {
+      allowed: true,
+      remaining: maxRequests,
+      resetAt: new Date(now.getTime() + windowMs),
+    };
+  }
+
   // Find or create rate limit entry
   let rateLimit = await prisma.rateLimit.findUnique({
     where: { key },
