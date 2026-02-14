@@ -99,15 +99,14 @@ export const es: Locale = {
     weighted: "Ponderado",
   },
   scoreDimensions: {
-    education_institutional_quality: "Educaci\u00f3n y Calidad Institucional",
-    professional_network_social_capital: "Red Profesional y Capital Social",
-    character_communication_quality: "Car\u00e1cter y Calidad de Comunicaci\u00f3n",
-    income_stability_earning_potential:
-      "Estabilidad de Ingresos y Potencial de Ganancia",
-    collateral_asset_base: "Garant\u00edas y Base de Activos",
-    debt_to_income_ratio: "Relaci\u00f3n Deuda-Ingreso",
-    purpose_alignment: "Alineaci\u00f3n del Prop\u00f3sito",
-    repayment_plan_credibility: "Credibilidad del Plan de Pago",
+    income_cashflow_evidence: "Evidencia de Ingresos y Flujo de Caja",
+    repayment_plan_specificity: "Especificidad del Plan de Pago",
+    loan_purpose_viability: "Viabilidad del Propósito del Préstamo",
+    debt_manageability: "Manejabilidad de la Deuda",
+    information_completeness: "Completitud de la Información",
+    internal_consistency: "Consistencia Interna",
+    financial_stability_indicators: "Indicadores de Estabilidad Financiera",
+    risk_awareness: "Conciencia de Riesgo",
   },
   extractedData: {
     title: "Datos de la Solicitud",

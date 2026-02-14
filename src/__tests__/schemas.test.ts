@@ -139,20 +139,20 @@ describe("loanApplicationSchema", () => {
 describe("underwritingResultSchema", () => {
   const validDimension = {
     score: 7,
-    justification: "Strong educational background from reputable institution",
-    weight: 0.15,
+    justification: "Applicant described concrete monthly income from established business",
+    weight: 0.25,
   };
 
   const validResult = {
     scores: {
-      education_institutional_quality: validDimension,
-      professional_network_social_capital: { ...validDimension, score: 6 },
-      character_communication_quality: { ...validDimension, score: 8 },
-      income_stability_earning_potential: { ...validDimension, score: 5 },
-      collateral_asset_base: { ...validDimension, score: 3 },
-      debt_to_income_ratio: { ...validDimension, score: 6 },
-      purpose_alignment: { ...validDimension, score: 8 },
-      repayment_plan_credibility: { ...validDimension, score: 7 },
+      income_cashflow_evidence: validDimension,
+      repayment_plan_specificity: { ...validDimension, score: 6 },
+      loan_purpose_viability: { ...validDimension, score: 8 },
+      debt_manageability: { ...validDimension, score: 5 },
+      information_completeness: { ...validDimension, score: 3 },
+      internal_consistency: { ...validDimension, score: 6 },
+      financial_stability_indicators: { ...validDimension, score: 8 },
+      risk_awareness: { ...validDimension, score: 7 },
     },
     weighted_score: 6.5,
     decision: "approve" as const,
@@ -201,14 +201,14 @@ describe("underwritingResultSchema", () => {
       ...validResult,
       scores: {
         ...validResult.scores,
-        education_institutional_quality: { ...validDimension, score: 0 },
+        income_cashflow_evidence: { ...validDimension, score: 0 },
       },
     };
     const tooHigh = {
       ...validResult,
       scores: {
         ...validResult.scores,
-        education_institutional_quality: { ...validDimension, score: 11 },
+        income_cashflow_evidence: { ...validDimension, score: 11 },
       },
     };
 
@@ -220,7 +220,7 @@ describe("underwritingResultSchema", () => {
     const missingDimension = {
       ...validResult,
       scores: {
-        education_institutional_quality: validDimension,
+        income_cashflow_evidence: validDimension,
         // Missing 7 other dimensions
       },
     };

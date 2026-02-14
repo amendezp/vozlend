@@ -56,14 +56,14 @@ export interface ScoreDimension {
 }
 
 export interface Scores {
-  education_institutional_quality: ScoreDimension;
-  professional_network_social_capital: ScoreDimension;
-  character_communication_quality: ScoreDimension;
-  income_stability_earning_potential: ScoreDimension;
-  collateral_asset_base: ScoreDimension;
-  debt_to_income_ratio: ScoreDimension;
-  purpose_alignment: ScoreDimension;
-  repayment_plan_credibility: ScoreDimension;
+  income_cashflow_evidence: ScoreDimension;
+  repayment_plan_specificity: ScoreDimension;
+  loan_purpose_viability: ScoreDimension;
+  debt_manageability: ScoreDimension;
+  information_completeness: ScoreDimension;
+  internal_consistency: ScoreDimension;
+  financial_stability_indicators: ScoreDimension;
+  risk_awareness: ScoreDimension;
 }
 
 export type Decision = "approve" | "decline" | "request_more_info";
@@ -135,12 +135,12 @@ export interface FullReport {
 // --- Score dimension labels for display ---
 
 export const SCORE_LABELS: Record<keyof Scores, string> = {
-  education_institutional_quality: "Education & Institutional Quality",
-  professional_network_social_capital: "Professional Network & Social Capital",
-  character_communication_quality: "Character & Communication Quality",
-  income_stability_earning_potential: "Income Stability & Earning Potential",
-  collateral_asset_base: "Collateral & Asset Base",
-  debt_to_income_ratio: "Debt-to-Income Ratio",
-  purpose_alignment: "Purpose Alignment",
-  repayment_plan_credibility: "Repayment Plan Credibility",
+  income_cashflow_evidence: "Income & Cash Flow Evidence",
+  repayment_plan_specificity: "Repayment Plan Specificity",
+  loan_purpose_viability: "Loan Purpose Viability",
+  debt_manageability: "Debt Manageability",
+  information_completeness: "Information Completeness",
+  internal_consistency: "Internal Consistency",
+  financial_stability_indicators: "Financial Stability Indicators",
+  risk_awareness: "Risk Awareness",
 };

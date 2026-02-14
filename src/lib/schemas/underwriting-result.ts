@@ -7,14 +7,14 @@ const scoreDimensionSchema = z.object({
 });
 
 export const scoresSchema = z.object({
-  education_institutional_quality: scoreDimensionSchema,
-  professional_network_social_capital: scoreDimensionSchema,
-  character_communication_quality: scoreDimensionSchema,
-  income_stability_earning_potential: scoreDimensionSchema,
-  collateral_asset_base: scoreDimensionSchema,
-  debt_to_income_ratio: scoreDimensionSchema,
-  purpose_alignment: scoreDimensionSchema,
-  repayment_plan_credibility: scoreDimensionSchema,
+  income_cashflow_evidence: scoreDimensionSchema,
+  repayment_plan_specificity: scoreDimensionSchema,
+  loan_purpose_viability: scoreDimensionSchema,
+  debt_manageability: scoreDimensionSchema,
+  information_completeness: scoreDimensionSchema,
+  internal_consistency: scoreDimensionSchema,
+  financial_stability_indicators: scoreDimensionSchema,
+  risk_awareness: scoreDimensionSchema,
 });
 
 const stressTestDecisionSchema = z.object({
