@@ -1,0 +1,1342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Echo Bank — Investor Pitch Deck</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400&display=swap');
+
+  :root {
+    --emerald: #10b981;
+    --emerald-dark: #059669;
+    --emerald-light: #d1fae5;
+    --dark: #111827;
+    --gray-900: #1f2937;
+    --gray-700: #374151;
+    --gray-500: #6b7280;
+    --gray-400: #9ca3af;
+    --gray-300: #d1d5db;
+    --gray-200: #e5e7eb;
+    --gray-100: #f3f4f6;
+    --gray-50: #f9fafb;
+    --red: #ef4444;
+    --blue: #3b82f6;
+    --amber: #f59e0b;
+    --purple: #8b5cf6;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body { height: 100%; overflow: hidden; }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    color: var(--gray-900);
+    background: #000;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---- Slide System ---- */
+  .deck { position: relative; width: 100vw; height: 100vh; }
+
+  .slide {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 72px 100px;
+    background: #fff;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.45s ease;
+    overflow-y: auto;
+  }
+  .slide.active {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .slide-brand {
+    position: absolute;
+    top: 32px;
+    left: 48px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--gray-400);
+    letter-spacing: 0.02em;
+  }
+  .slide-number-badge {
+    position: absolute;
+    top: 32px;
+    right: 48px;
+    font-size: 11px;
+    color: var(--gray-400);
+    font-weight: 300;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* ---- Navigation ---- */
+  .nav-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 32px;
+    background: rgba(17,24,39,0.92);
+    backdrop-filter: blur(12px);
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+  .nav-btn {
+    padding: 8px 20px;
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 8px;
+    background: transparent;
+    color: rgba(255,255,255,0.7);
+    font-size: 13px;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    transition: all 0.2s;
+    user-select: none;
+  }
+  .nav-btn:hover { background: rgba(255,255,255,0.08); color: white; }
+  .nav-btn:disabled { opacity: 0.25; cursor: default; }
+  .nav-btn:disabled:hover { background: transparent; color: rgba(255,255,255,0.7); }
+  .nav-progress {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .nav-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  .nav-dot.active { background: var(--emerald); transform: scale(1.4); }
+  .nav-dot:hover { background: rgba(255,255,255,0.4); }
+  .nav-counter {
+    font-size: 12px;
+    color: rgba(255,255,255,0.4);
+    font-family: 'JetBrains Mono', monospace;
+    margin: 0 12px;
+    min-width: 48px;
+    text-align: center;
+  }
+  .nav-keys {
+    font-size: 10px;
+    color: rgba(255,255,255,0.2);
+    position: absolute;
+    right: 32px;
+    top: -24px;
+    letter-spacing: 0.05em;
+  }
+
+  /* ---- Typography ---- */
+  h1 { font-size: 56px; font-weight: 300; line-height: 1.15; letter-spacing: -0.02em; }
+  h2 { font-size: 42px; font-weight: 300; line-height: 1.2; letter-spacing: -0.01em; }
+  h3 { font-size: 28px; font-weight: 400; line-height: 1.3; }
+  h4 { font-size: 20px; font-weight: 500; line-height: 1.4; }
+  p { font-size: 18px; font-weight: 300; line-height: 1.7; color: var(--gray-500); }
+  .subtitle { font-size: 22px; font-weight: 300; color: var(--gray-500); margin-top: 16px; }
+  .section-label {
+    font-size: 13px; font-weight: 500; letter-spacing: 0.15em;
+    text-transform: uppercase; color: var(--emerald); margin-bottom: 12px;
+  }
+  .highlight { color: var(--emerald); }
+  .mono { font-family: 'JetBrains Mono', monospace; }
+
+  /* ---- Stat cards ---- */
+  .stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; margin-top: 40px; }
+  .stat-card { padding: 28px; border-radius: 14px; border: 1px solid var(--gray-100); background: var(--gray-50); }
+  .stat-number { font-size: 44px; font-weight: 300; color: var(--dark); letter-spacing: -0.02em; }
+  .stat-label { font-size: 15px; font-weight: 400; color: var(--gray-500); margin-top: 6px; }
+  .stat-source { font-size: 12px; font-weight: 300; color: var(--gray-400); margin-top: 4px; }
+
+  /* ---- Two column ---- */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: start; margin-top: 40px; }
+
+  /* ---- Feature list ---- */
+  .feature-list { list-style: none; margin-top: 20px; }
+  .feature-list li {
+    padding: 14px 0; border-bottom: 1px solid var(--gray-100);
+    display: flex; align-items: flex-start; gap: 14px;
+    font-size: 16px; font-weight: 300; color: var(--gray-700);
+  }
+  .feature-list li:last-child { border-bottom: none; }
+  .feature-icon {
+    flex-shrink: 0; width: 30px; height: 30px; background: var(--emerald-light);
+    border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 13px;
+  }
+
+  /* ---- Competitor table ---- */
+  .comp-table { width: 100%; border-collapse: collapse; margin-top: 28px; font-size: 14px; }
+  .comp-table th {
+    text-align: left; padding: 10px 14px; font-weight: 500; font-size: 12px;
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray-400);
+    border-bottom: 2px solid var(--gray-100);
+  }
+  .comp-table td {
+    padding: 14px 14px; font-weight: 300; color: var(--gray-700);
+    border-bottom: 1px solid var(--gray-50); vertical-align: top;
+  }
+  .comp-table tr:hover td { background: var(--gray-50); }
+  .comp-highlight { background: rgba(16,185,129,0.06) !important; }
+  .comp-highlight td { font-weight: 400; color: var(--dark); }
+
+  /* ---- Architecture diagrams ---- */
+  .arch-flow { display: flex; align-items: center; gap: 0; margin: 36px 0; flex-wrap: wrap; justify-content: center; }
+  .arch-node { padding: 18px 24px; border-radius: 12px; text-align: center; min-width: 130px; }
+  .arch-node-label { font-size: 14px; font-weight: 500; color: var(--dark); }
+  .arch-node-sub { font-size: 12px; font-weight: 300; color: var(--gray-400); margin-top: 4px; }
+  .arch-arrow { font-size: 18px; color: var(--gray-300); padding: 0 6px; }
+  .arch-user { background: #ede9fe; border: 1px solid #ddd6fe; }
+  .arch-frontend { background: #dbeafe; border: 1px solid #bfdbfe; }
+  .arch-api { background: var(--emerald-light); border: 1px solid #a7f3d0; }
+  .arch-ai { background: #fef3c7; border: 1px solid #fde68a; }
+  .arch-output { background: #fce7f3; border: 1px solid #fbcfe8; }
+
+  /* ---- Score dimensions ---- */
+  .score-dim { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 28px; }
+  .score-dim-card { padding: 18px; border-radius: 12px; border: 1px solid var(--gray-100); }
+  .score-dim-title { font-size: 14px; font-weight: 500; color: var(--dark); }
+  .score-dim-weight { font-size: 12px; font-weight: 400; color: var(--emerald); font-family: 'JetBrains Mono', monospace; }
+  .score-dim-desc { font-size: 13px; font-weight: 300; color: var(--gray-400); margin-top: 4px; line-height: 1.5; }
+
+  /* ---- VALUE framework ---- */
+  .value-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 36px; }
+  .value-card { padding: 24px; border-radius: 14px; border: 1px solid var(--gray-100); }
+  .value-letter { font-size: 32px; font-weight: 700; color: var(--emerald); line-height: 1; }
+  .value-title { font-size: 16px; font-weight: 500; color: var(--dark); margin-top: 6px; }
+  .value-desc { font-size: 14px; font-weight: 300; color: var(--gray-500); margin-top: 6px; line-height: 1.6; }
+  .value-verdict { font-size: 13px; font-weight: 500; color: var(--emerald-dark); margin-top: 10px; padding: 5px 10px; background: var(--emerald-light); border-radius: 6px; display: inline-block; }
+
+  /* ---- Mockup frames ---- */
+  .mockup-frame {
+    background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: 14px;
+    padding: 12px; max-width: 280px; margin: 0 auto;
+  }
+  .mockup-browser-bar {
+    display: flex; align-items: center; gap: 5px; margin-bottom: 10px;
+    padding: 6px 10px; background: white; border-radius: 7px; border: 1px solid var(--gray-100);
+  }
+  .mockup-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--gray-200); }
+  .mockup-url { font-size: 9px; color: var(--gray-400); font-family: 'JetBrains Mono', monospace; margin-left: 6px; }
+  .mockup-content { padding: 20px 16px; background: white; border-radius: 10px; text-align: center; }
+  .mockup-btn {
+    width: 56px; height: 56px; border-radius: 50%;
+    background: linear-gradient(to bottom, #34d399, #10b981);
+    margin: 0 auto 10px; display: flex; align-items: center; justify-content: center;
+    color: white; font-size: 22px; box-shadow: 0 4px 14px rgba(16,185,129,0.3);
+  }
+  .mockup-title { font-size: 12px; font-weight: 400; color: var(--gray-700); }
+  .mockup-sub { font-size: 9px; font-weight: 300; color: var(--gray-400); margin-top: 3px; }
+  .mockup-score-bar { height: 3px; background: var(--gray-100); border-radius: 2px; margin-top: 6px; overflow: hidden; }
+  .mockup-score-fill { height: 100%; border-radius: 2px; background: var(--emerald); }
+  .mockup-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 28px; margin-top: 40px; align-items: start; }
+  .mockup-label { font-size: 11px; font-weight: 500; color: var(--gray-400); text-align: center; margin-top: 12px; letter-spacing: 0.08em; text-transform: uppercase; }
+
+  /* ---- Cover & dark slides ---- */
+  .slide-cover { background: var(--dark); color: white; }
+  .slide-cover h1 { color: white; font-size: 68px; }
+  .slide-cover .subtitle { color: rgba(255,255,255,0.5); }
+  .slide-cover .section-label { color: var(--emerald); }
+
+  .slide-dark { background: var(--dark); color: white; }
+  .slide-dark h2 { color: white; }
+  .slide-dark p { color: rgba(255,255,255,0.5); }
+  .slide-dark .section-label { color: var(--emerald); }
+  .slide-dark .stat-card { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1); }
+  .slide-dark .stat-number { color: white; }
+  .slide-dark .stat-label { color: rgba(255,255,255,0.5); }
+  .slide-dark .stat-source { color: rgba(255,255,255,0.3); }
+
+  /* ---- Pills ---- */
+  .pill { display: inline-block; padding: 5px 12px; border-radius: 999px; font-size: 13px; font-weight: 500; letter-spacing: 0.04em; }
+  .pill-green { background: var(--emerald-light); color: var(--emerald-dark); }
+  .pill-blue { background: #dbeafe; color: #1d4ed8; }
+  .pill-amber { background: #fef3c7; color: #92400e; }
+  .pill-purple { background: #ede9fe; color: #6d28d9; }
+  .pill-red { background: #fee2e2; color: #991b1b; }
+
+  /* ---- TOC ---- */
+  .toc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 36px; }
+  .toc-item {
+    display: flex; align-items: center; gap: 14px; padding: 14px 18px;
+    border-radius: 10px; border: 1px solid var(--gray-100);
+    cursor: pointer; transition: all 0.2s; text-decoration: none; color: inherit;
+  }
+  .toc-item:hover { background: var(--gray-50); border-color: var(--emerald); }
+  .toc-num {
+    font-size: 12px; font-weight: 500; color: var(--emerald);
+    font-family: 'JetBrains Mono', monospace; min-width: 28px;
+  }
+  .toc-title { font-size: 15px; font-weight: 400; color: var(--dark); }
+  .toc-section {
+    font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--gray-400); grid-column: 1 / -1; margin-top: 12px; padding-bottom: 4px;
+    border-bottom: 1px solid var(--gray-100);
+  }
+
+  /* ---- Regulatory ---- */
+  .reg-card {
+    padding: 20px; border-radius: 12px; border: 1px solid var(--gray-100);
+    margin-top: 12px;
+  }
+  .reg-title { font-size: 15px; font-weight: 500; color: var(--dark); }
+  .reg-desc { font-size: 13px; font-weight: 300; color: var(--gray-500); margin-top: 6px; line-height: 1.6; }
+  .reg-verdict { font-size: 13px; font-weight: 500; margin-top: 10px; padding: 5px 10px; border-radius: 6px; display: inline-block; }
+  .reg-ok { background: var(--emerald-light); color: var(--emerald-dark); }
+  .reg-caution { background: #fef3c7; color: #92400e; }
+  .reg-risk { background: #fee2e2; color: #991b1b; }
+
+  /* ---- Flywheel ---- */
+  .flywheel { width: 380px; height: 380px; border-radius: 50%; border: 2px dashed var(--gray-200); position: relative; margin: 40px auto; }
+  .flywheel-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; width: 140px; }
+  .flywheel-node {
+    position: absolute; width: 120px; text-align: center; padding: 12px;
+    border-radius: 10px; background: white; border: 1px solid var(--gray-200);
+    font-size: 11px; font-weight: 400; box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+  .flywheel-node strong { display: block; font-weight: 500; margin-bottom: 3px; font-size: 12px; }
+
+  /* ---- Citation ---- */
+  .citation { font-size: 13px; font-weight: 300; color: var(--gray-400); line-height: 1.6; margin-top: 8px; }
+  .citation em { font-style: italic; }
+
+  /* ---- Porter's Five Forces ---- */
+  .porter-container { position: relative; width: 520px; height: 420px; margin: 32px auto 0; }
+  .porter-center {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    width: 160px; height: 160px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--emerald), var(--emerald-dark));
+    display: flex; align-items: center; justify-content: center; flex-direction: column;
+    color: white; text-align: center; z-index: 2;
+    box-shadow: 0 8px 32px rgba(16,185,129,0.3);
+  }
+  .porter-center-title { font-size: 13px; font-weight: 600; }
+  .porter-center-sub { font-size: 9px; font-weight: 300; opacity: 0.8; margin-top: 2px; }
+  .porter-force {
+    position: absolute; width: 150px; padding: 14px; border-radius: 12px;
+    border: 1px solid var(--gray-200); background: white; text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04); z-index: 2;
+  }
+  .porter-force-title { font-size: 11px; font-weight: 600; color: var(--dark); }
+  .porter-force-level { font-size: 9px; font-weight: 500; margin-top: 4px; padding: 2px 8px; border-radius: 4px; display: inline-block; }
+  .porter-force-desc { font-size: 9px; font-weight: 300; color: var(--gray-400); margin-top: 4px; line-height: 1.4; }
+  .porter-line {
+    position: absolute; z-index: 1;
+    background: var(--gray-200);
+  }
+  .force-low { background: var(--emerald-light); color: var(--emerald-dark); }
+  .force-med { background: #fef3c7; color: #92400e; }
+  .force-high { background: #fee2e2; color: #991b1b; }
+
+  /* ---- Radar / Spider Chart ---- */
+  .radar-container { display: flex; align-items: center; gap: 48px; margin-top: 36px; }
+  .radar-svg { flex-shrink: 0; }
+  .radar-legend { display: flex; flex-direction: column; gap: 10px; }
+  .radar-legend-item { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 300; color: var(--gray-700); }
+  .radar-legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+  /* ---- TAM/SAM/SOM Concentric ---- */
+  .tam-circles { position: relative; width: 440px; height: 440px; margin: 28px auto 0; }
+  .tam-ring {
+    position: absolute; border-radius: 50%; display: flex; align-items: flex-start;
+    justify-content: center; padding-top: 28px; text-align: center;
+  }
+  .tam-ring-label { font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; }
+  .tam-ring-value { font-size: 28px; font-weight: 300; margin-top: 2px; }
+  .tam-ring-desc { font-size: 10px; font-weight: 300; margin-top: 2px; opacity: 0.7; }
+
+  /* ---- Unit Economics / Waterfall ---- */
+  .waterfall { display: flex; align-items: flex-end; gap: 0; margin-top: 28px; height: 260px; position: relative; }
+  .waterfall-bar-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; position: relative; height: 100%; justify-content: flex-end; }
+  .waterfall-bar {
+    width: 52px; border-radius: 6px 6px 0 0; position: relative;
+    transition: all 0.3s; min-height: 4px;
+  }
+  .waterfall-bar-negative { border-radius: 0 0 6px 6px; }
+  .waterfall-value { font-size: 11px; font-weight: 500; color: var(--dark); text-align: center; margin-bottom: 4px; font-family: 'JetBrains Mono', monospace; }
+  .waterfall-label { font-size: 9px; font-weight: 400; color: var(--gray-400); text-align: center; margin-top: 8px; max-width: 72px; line-height: 1.3; }
+  .waterfall-connector { position: absolute; height: 1px; background: var(--gray-300); top: 0; }
+
+  /* ---- BCG Matrix ---- */
+  .bcg-matrix {
+    display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr;
+    width: 480px; height: 400px; margin: 28px auto 0;
+    border-left: 2px solid var(--gray-300); border-bottom: 2px solid var(--gray-300);
+    position: relative;
+  }
+  .bcg-quadrant {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 20px; text-align: center; position: relative;
+  }
+  .bcg-quadrant:nth-child(1) { border-bottom: 1px dashed var(--gray-200); border-right: 1px dashed var(--gray-200); }
+  .bcg-quadrant:nth-child(2) { border-bottom: 1px dashed var(--gray-200); }
+  .bcg-quadrant:nth-child(3) { border-right: 1px dashed var(--gray-200); }
+  .bcg-icon { font-size: 28px; margin-bottom: 6px; }
+  .bcg-title { font-size: 13px; font-weight: 600; color: var(--dark); }
+  .bcg-product { font-size: 10px; font-weight: 400; color: var(--gray-500); margin-top: 4px; line-height: 1.4; }
+  .bcg-label-x {
+    position: absolute; bottom: -28px; left: 50%; transform: translateX(-50%);
+    font-size: 10px; font-weight: 500; color: var(--gray-400); letter-spacing: 0.1em; text-transform: uppercase;
+  }
+  .bcg-label-y {
+    position: absolute; left: -40px; top: 50%; transform: translateY(-50%) rotate(-90deg);
+    font-size: 10px; font-weight: 500; color: var(--gray-400); letter-spacing: 0.1em; text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  /* ---- Risk Matrix ---- */
+  .risk-matrix {
+    display: grid; grid-template-columns: 40px repeat(4, 1fr); grid-template-rows: repeat(4, 1fr) 40px;
+    width: 560px; height: 380px; margin: 28px auto 0; gap: 3px; position: relative;
+  }
+  .risk-cell {
+    border-radius: 8px; display: flex; align-items: center; justify-content: center;
+    padding: 6px; text-align: center; position: relative;
+  }
+  .risk-cell-content { font-size: 11px; font-weight: 400; color: var(--dark); line-height: 1.3; }
+  .risk-green { background: rgba(16,185,129,0.1); }
+  .risk-yellow { background: rgba(245,158,11,0.1); }
+  .risk-orange { background: rgba(249,115,22,0.12); }
+  .risk-red { background: rgba(239,68,68,0.1); }
+  .risk-axis-label {
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 500; color: var(--gray-400); text-transform: uppercase; letter-spacing: 0.08em;
+  }
+  .risk-dot {
+    width: 8px; height: 8px; border-radius: 50%; position: absolute;
+    box-shadow: 0 0 0 2px white, 0 0 0 3px currentColor;
+  }
+
+  /* ---- SWOT ---- */
+  .swot-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 28px; }
+  .swot-card { padding: 20px; border-radius: 12px; }
+  .swot-title { font-size: 13px; font-weight: 600; margin-bottom: 8px; }
+  .swot-list { list-style: none; font-size: 11px; font-weight: 300; line-height: 1.8; }
+  .swot-list li::before { margin-right: 6px; }
+
+  /* ---- Responsive ---- */
+  @media (max-width: 900px) {
+    .slide { padding: 40px 24px; }
+    h1 { font-size: 32px; }
+    h2 { font-size: 26px; }
+    .stat-grid, .two-col, .score-dim, .value-grid, .toc-grid, .swot-grid { grid-template-columns: 1fr; }
+    .mockup-row { grid-template-columns: 1fr; }
+    .slide-cover h1 { font-size: 40px; }
+    .arch-flow { flex-direction: column; }
+    .arch-arrow { transform: rotate(90deg); }
+    .porter-container, .tam-circles, .bcg-matrix, .risk-matrix { transform: scale(0.7); transform-origin: top center; }
+    .radar-container { flex-direction: column; }
+  }
+
+  /* ---- Print ---- */
+  @media print {
+    .nav-bar { display: none; }
+    .slide { position: relative; opacity: 1; pointer-events: all; page-break-after: always; min-height: 100vh; overflow: visible; }
+    html, body { overflow: visible; height: auto; }
+    body { background: white; }
+  }
+</style>
+</head>
+<body>
+
+<div class="deck" id="deck">
+
+<!-- ====== SLIDE 0: COVER ====== -->
+<div class="slide slide-cover active" data-slide="0">
+  <div class="section-label">Investor Pitch — February 2026</div>
+  <h1 style="margin-top: 20px;">Echo Bank</h1>
+  <p class="subtitle" style="font-size: 26px; margin-top: 20px; color: rgba(255,255,255,0.6);">
+    Your voice is your loan application.
+  </p>
+  <p style="margin-top: 36px; color: rgba(255,255,255,0.35); font-size: 15px;">
+    AI-powered voice underwriting for the 1.4B adults<br>the financial system was never built to serve.
+  </p>
+  <div style="margin-top: 56px; display: flex; gap: 20px;">
+    <span class="pill pill-green">Voice-First</span>
+    <span class="pill pill-blue">AI Underwriting</span>
+    <span class="pill pill-amber">Mexico + USA</span>
+    <span class="pill pill-purple">Financial Inclusion</span>
+  </div>
+</div>
+
+<!-- ====== SLIDE 1: TABLE OF CONTENTS ====== -->
+<div class="slide" data-slide="1">
+  <div class="slide-brand">Echo Bank</div>
+  <div class="section-label">Table of Contents</div>
+  <h2>Deck <span class="highlight">Overview</span></h2>
+
+  <div class="toc-grid">
+    <div class="toc-section">Main Deck</div>
+    <div class="toc-item" onclick="goTo(2)"><span class="toc-num">01</span><span class="toc-title">The Problem</span></div>
+    <div class="toc-item" onclick="goTo(3)"><span class="toc-num">02</span><span class="toc-title">The Solution</span></div>
+    <div class="toc-item" onclick="goTo(4)"><span class="toc-num">03</span><span class="toc-title">Market Opportunity</span></div>
+    <div class="toc-item" onclick="goTo(5)"><span class="toc-num">04</span><span class="toc-title">TAM / SAM / SOM Breakdown</span></div>
+    <div class="toc-item" onclick="goTo(6)"><span class="toc-num">05</span><span class="toc-title">Competitive Landscape</span></div>
+    <div class="toc-item" onclick="goTo(7)"><span class="toc-num">06</span><span class="toc-title">Competitive Radar Analysis</span></div>
+    <div class="toc-item" onclick="goTo(8)"><span class="toc-num">07</span><span class="toc-title">Investment Thesis (V.A.L.U.E.)</span></div>
+    <div class="toc-item" onclick="goTo(9)"><span class="toc-num">08</span><span class="toc-title">Unit Economics</span></div>
+    <div class="toc-item" onclick="goTo(10)"><span class="toc-num">09</span><span class="toc-title">Data Flywheel &amp; Defensibility</span></div>
+    <div class="toc-item" onclick="goTo(11)"><span class="toc-num">10</span><span class="toc-title">Product Mockups</span></div>
+    <div class="toc-item" onclick="goTo(12)"><span class="toc-num">11</span><span class="toc-title">Go to Market</span></div>
+    <div class="toc-item" onclick="goTo(13)"><span class="toc-num">12</span><span class="toc-title">Risk Matrix</span></div>
+    <div class="toc-item" onclick="goTo(14)"><span class="toc-num">13</span><span class="toc-title">The Ask</span></div>
+    <div class="toc-section">Appendices</div>
+    <div class="toc-item" onclick="goTo(15)"><span class="toc-num">A1</span><span class="toc-title">How the Product Works</span></div>
+    <div class="toc-item" onclick="goTo(16)"><span class="toc-num">A2</span><span class="toc-title">8-Dimension Scoring Engine</span></div>
+    <div class="toc-item" onclick="goTo(17)"><span class="toc-num">B</span><span class="toc-title">Peer-Reviewed Science</span></div>
+    <div class="toc-item" onclick="goTo(18)"><span class="toc-num">C1</span><span class="toc-title">Technical Deep Dive</span></div>
+    <div class="toc-item" onclick="goTo(19)"><span class="toc-num">C2</span><span class="toc-title">Application State Flow</span></div>
+    <div class="toc-item" onclick="goTo(20)"><span class="toc-num">D</span><span class="toc-title">Regulatory &amp; Fair Lending Analysis</span></div>
+  </div>
+  <div class="slide-number-badge">TOC</div>
+</div>
+
+<!-- ====== SLIDE 2: PROBLEM ====== -->
+<div class="slide" data-slide="2">
+  <div class="slide-brand">Echo Bank</div>
+  <div class="section-label">The Problem</div>
+  <h2>1.4 billion adults are <span class="highlight">invisible</span><br>to the financial system.</h2>
+  <p class="subtitle">They don't lack creditworthiness. They lack credit history.</p>
+  <div class="stat-grid">
+    <div class="stat-card">
+      <div class="stat-number">1.4B</div>
+      <div class="stat-label">Unbanked adults worldwide</div>
+      <div class="stat-source">World Bank Global Findex, 2024</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">45M</div>
+      <div class="stat-label">US adults with no credit score ("credit invisible" + "unscorable")</div>
+      <div class="stat-source">CFPB, 2024</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">122M</div>
+      <div class="stat-label">Unbanked adults in Latin America — 70% lack formal credit</div>
+      <div class="stat-source">World Bank Findex + Mastercard, 2023</div>
+    </div>
+  </div>
+  <p style="margin-top: 36px; font-size: 14px;">
+    Traditional credit bureaus require years of banking history. But a 2-minute voice memo reveals education, employment, character, repayment intent — everything a human underwriter needs.
+    <strong style="color:var(--dark);font-weight:400;">7 billion WhatsApp voice messages are sent daily.</strong> Voice is the most natural input for billions of people.
+  </p>
+  <div class="slide-number-badge">01</div>
+</div>
+
+<!-- ====== SLIDE 3: SOLUTION ====== -->
+<div class="slide" data-slide="3">
+  <div class="slide-brand">Echo Bank</div>
+  <div class="section-label">The Solution</div>
+  <h2>Record. Analyze. <span class="highlight">Decide.</span></h2>
+  <p class="subtitle">60 seconds from voice memo to underwriting decision.</p>
+  <div class="two-col">
+    <div>
+      <ul class="feature-list">
+        <li>
+          <div class="feature-icon">🎙️</div>
+          <div><strong style="font-weight:500;color:var(--dark);">Voice-first application</strong><br>
+          <span style="font-size:13px;">Record a voice memo in English or Spanish. No forms, no paperwork, no credit history needed.</span></div>
+        </li>
+        <li>
+          <div class="feature-icon">🧠</div>
+          <div><strong style="font-weight:500;color:var(--dark);">AI transcription & extraction</strong><br>
+          <span style="font-size:13px;">OpenAI Whisper transcribes. GPT-4o extracts structured data: name, occupation, loan amount, purpose, repayment strategy.</span></div>
+        </li>
+        <li>
+          <div class="feature-icon">📊</div>
+          <div><strong style="font-weight:500;color:var(--dark);">8-dimension underwriting</strong><br>
+          <span style="font-size:13px;">Character-based scoring across education, income potential, communication quality, repayment credibility, and more.</span></div>
+        </li>
+        <li>
+          <div class="feature-icon">✅</div>
+          <div><strong style="font-weight:500;color:var(--dark);">Instant decision & terms</strong><br>
+          <span style="font-size:13px;">Approve, decline, or request more info — with loan terms, interest rates, and conditions personalized to each applicant.</span></div>
+        </li>
+      </ul>
+    </div>
+    <div>
+      <div class="mockup-frame">
+        <div class="mockup-browser-bar">
+          <div class="mockup-dot"></div><div class="mockup-dot"></div><div class="mockup-dot"></div>
+          <div class="mockup-url">echobank.vercel.app</div>
+        </div>
+        <div class="mockup-content">
+          <div class="mockup-btn">🎙️</div>
+          <div class="mockup-title">Tap to start recording</div>
+          <div class="mockup-sub">Tell us about yourself, what you do,<br>how much you need, and how you'll pay it back</div>
+          <div style="margin-top:10px;padding:8px;background:var(--gray-50);border-radius:6px;">
+            <div style="font-size:9px;color:var(--gray-400);">or</div>
+            <div style="font-size:10px;color:var(--gray-500);margin-top:2px;">📎 Upload a voice memo file</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-number-badge">02</div>
+</div>
+
+<!-- ====== SLIDE 4: MARKET ====== -->
+<div class="slide slide-dark" data-slide="4">
+  <div class="slide-brand" style="color:rgba(255,255,255,0.3);">Echo Bank</div>
+  <div class="section-label">Market Opportunity</div>
+  <h2>A <span class="highlight">$466B</span> market growing at <span class="highlight">22%</span> CAGR</h2>
+  <p>Alternative lending is the fastest-growing fintech vertical across both the USA and Latin America.</p>
+  <div class="stat-grid">
+    <div class="stat-card"><div class="stat-number" style="font-size:34px;">$466B</div><div class="stat-label">Global Alternative Lending TAM</div><div class="stat-source">Verified Market Reports, 2024</div></div>
+    <div class="stat-card"><div class="stat-number" style="font-size:34px;">$58B</div><div class="stat-label">LatAm Alt. Lending by 2028</div><div class="stat-source">Research and Markets, 2024</div></div>
+    <div class="stat-card"><div class="stat-number" style="font-size:34px;">$47.5B</div><div class="stat-label">Voice AI Market by 2034</div><div class="stat-source">Market.us (34.8% CAGR)</div></div>
+  </div>
+  <div style="margin-top:40px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:28px;">
+    <div style="text-align:center;">
+      <div style="font-size:10px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.3);">TAM</div>
+      <div style="font-size:26px;font-weight:300;color:white;margin-top:6px;">$466B</div>
+      <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:3px;">Global alternative lending</div>
+    </div>
+    <div style="text-align:center;">
+      <div style="font-size:10px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.3);">SAM</div>
+      <div style="font-size:26px;font-weight:300;color:white;margin-top:6px;">$35B</div>
+      <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:3px;">USA + Mexico thin-file lending</div>
+    </div>
+    <div style="text-align:center;">
+      <div style="font-size:10px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.3);">SOM</div>
+      <div style="font-size:26px;font-weight:300;color:white;margin-top:6px;">$750M</div>
+      <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:3px;">Voice-scored micro-lending (Year 5)</div>
+    </div>
+  </div>
+  <div class="slide-number-badge" style="color:rgba(255,255,255,0.2);">03</div>
+</div>
+
+<!-- ====== SLIDE 5: TAM/SAM/SOM CONCENTRIC ====== -->
+<div class="slide" data-slide="5">
+  <div class="slide-brand">Echo Bank</div>
+  <div class="section-label">Market Sizing</div>
+  <h2>TAM / SAM / SOM <span class="highlight">Breakdown</span></h2>
+  <p class="subtitle" style="font-size:15px;">Bottom-up sizing of addressable markets for voice-first lending.</p>
+  <div style="display:flex;align-items:center;gap:56px;margin-top:28px;">
+    <div class="tam-circles">
+      <div class="tam-ring" style="width:440px;height:440px;top:0;left:0;background:rgba(59,130,246,0.06);border:2px solid rgba(59,130,246,0.15);">
+        <div><div class="tam-ring-label" style="color:var(--blue);">TAM</div><div class="tam-ring-value" style="color:var(--blue);">$466B</div><div class="tam-ring-desc" style="color:var(--blue);">Global alt. lending</div></div>
+      </div>
+      <div class="tam-ring" style="width:300px;height:300px;top:70px;left:70px;background:rgba(139,92,246,0.06);border:2px solid rgba(139,92,246,0.15);">
+        <div><div class="tam-ring-label" style="color:var(--purple);">SAM</div><div class="tam-ring-value" style="color:var(--purple);">$35B</div><div class="tam-ring-desc" style="color:var(--purple);">USA + Mexico thin-file</div></div>
+      </div>
+      <div class="tam-ring" style="width:160px;height:160px;top:140px;left:140px;background:rgba(16,185,129,0.08);border:2px solid rgba(16,185,129,0.2);">
+        <div style="padding-top:14px;"><div class="tam-ring-label" style="color:var(--emerald);">SOM</div><div class="tam-ring-value" style="color:var(--emerald);font-size:22px;">$750M</div><div class="tam-ring-desc" style="color:var(--emerald);">Year 5</div></div>
+      </div>
+    </div>
+    <div style="flex:1;">
+      <h4 style="font-size:16px;">Sizing Methodology</h4>
+      <div style="margin-top:14px;font-size:14px;">
+        <div style="padding:12px;background:rgba(59,130,246,0.05);border-radius:8px;border-left:3px solid var(--blue);margin-bottom:10px;">
+          <div style="font-weight:500;color:var(--dark);">TAM: $466B</div>
+          <div style="color:var(--gray-500);margin-top:3px;">Global alternative lending originations across all segments, growing at 22% CAGR.</div>
+        </div>
+        <div style="padding:12px;background:rgba(139,92,246,0.05);border-radius:8px;border-left:3px solid var(--purple);margin-bottom:10px;">
+          <div style="font-weight:500;color:var(--dark);">SAM: $35B</div>
+          <div style="color:var(--gray-500);margin-top:3px;">45M US credit-invisible adults ($25B) + 54M unbanked Mexico ($10B). Thin-file micro-lending only.</div>
+        </div>
+        <div style="padding:12px;background:rgba(16,185,129,0.05);border-radius:8px;border-left:3px solid var(--emerald);">
+          <div style="font-weight:500;color:var(--dark);">SOM: $750M (Year 5)</div>
+          <div style="color:var(--gray-500);margin-top:3px;">2.1% SAM capture via direct lending (MX) + B2B API licensing (US). ~300K loans at $2,500 avg.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-number-badge">04</div>
+</div>
+
+<!-- ====== SLIDE 6: COMPETITION TABLE ====== -->
+<div class="slide" data-slide="6">
+  <div class="slide-brand">Echo Bank</div>
+  <div class="section-label">Competitive Landscape</div>
+  <h2>Nobody else is <span class="highlight">listening.</span></h2>
+  <p class="subtitle">Competitors use phone metadata, psychometrics, or digital footprints. None use the applicant's voice.</p>
+  <table class="comp-table">
+    <thead><tr><th>Company</th><th>Data Source</th><th>Market</th><th>Funding</th><th>Gap</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Tala</strong></td><td>Phone metadata (250+ signals)</td><td>Kenya, Philippines, Mexico, India</td><td>$346M, $800M val.</td><td>No voice, no character signal</td></tr>
+      <tr><td><strong>Branch</strong></td><td>SMS, GPS, handset data</td><td>Kenya, Nigeria, Tanzania, India</td><td>$370M+</td><td>Surveillance model — privacy concerns</td></tr>
+      <tr><td><strong>Upstart</strong></td><td>Education, employment + AI/ML</td><td>US (bank partnerships)</td><td>Public (UPST)</td><td>US-only, requires existing data</td></tr>
+      <tr><td><strong>Nova Credit</strong></td><td>Cross-border credit transfer</td><td>US immigrants</td><td>$100M+</td><td>Requires foreign credit file</td></tr>
+      <tr><td><strong>LenddoEFL</strong></td><td>Psychometric tests + digital footprint</td><td>20+ developing countries</td><td>$26.6M</td><td>Written tests — low completion</td></tr>
+      <tr class="comp-highlight"><td><strong style="color:var(--emerald);">Echo Bank</strong></td><td><strong>Voice memos → AI underwriting</strong></td><td><strong>USA + Mexico (pilot)</strong></td><td><strong>Pre-seed</strong></td><td><strong>Only voice-first solution ✦</strong></td></tr>
+    </tbody>
+  </table>
+  <div class="slide-number-badge">05</div>
+</div>
+
+<!-- ====== SLIDE 7: COMPETITIVE RADAR ====== -->
+<div class="slide" data-slide="7">
+  <div class="slide-brand">Echo Bank</div>
+  <div class="section-label">Competitive Analysis</div>
+  <h2>Competitive <span class="highlight">Radar</span></h2>
+  <p class="subtitle" style="font-size:15px;">Multi-axis comparison across 6 strategic dimensions.</p>
+  <div class="radar-container">
+    <svg class="radar-svg" width="380" height="380" viewBox="0 0 380 380">
+      <!-- Grid rings -->
+      <polygon points="190,30 346,110 346,270 190,350 34,270 34,110" fill="none" stroke="#e5e7eb" stroke-width="1"/>
+      <polygon points="190,70 318,130 318,250 190,310 62,250 62,130" fill="none" stroke="#e5e7eb" stroke-width="1"/>
+      <polygon points="190,110 290,150 290,230 190,270 90,230 90,150" fill="none" stroke="#e5e7eb" stroke-width="1"/>
+      <polygon points="190,150 262,170 262,210 190,230 118,210 118,170" fill="none" stroke="#e5e7eb" stroke-width="1"/>
+      <!-- Axis lines -->
+      <line x1="190" y1="190" x2="190" y2="30" stroke="#e5e7eb" stroke-width="1"/>
+      <line x1="190" y1="190" x2="346" y2="110" stroke="#e5e7eb" stroke-width="1"/>
+      <line x1="190" y1="190" x2="346" y2="270" stroke="#e5e7eb" stroke-width="1"/>
+      <line x1="190" y1="190" x2="190" y2="350" stroke="#e5e7eb" stroke-width="1"/>
+      <line x1="190" y1="190" x2="34" y2="270" stroke="#e5e7eb" stroke-width="1"/>
+      <line x1="190" y1="190" x2="34" y2="110" stroke="#e5e7eb" stroke-width="1"/>
+      <!-- Tala (gray) -->
+      <polygon points="190,110 290,150 318,250 190,310 90,230 62,130" fill="rgba(156,163,175,0.08)" stroke="#9ca3af" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <!-- Upstart (blue) -->
+      <polygon points="190,70 262,170 290,230 190,270 118,210 62,130" fill="rgba(59,130,246,0.06)" stroke="#3b82f6" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <!-- Echo Bank (emerald) -->
+      <polygon points="190,50 318,130 290,230 190,270 90,230 62,130" fill="rgba(16,185,129,0.1)" stroke="#10b981" stroke-width="2.5"/>
+      <!-- Dots -->
+      <circle cx="190" cy="50" r="4" fill="#10b981"/><circle cx="318" cy="130" r="4" fill="#10b981"/>
+      <circle cx="290" cy="230" r="4" fill="#10b981"/><circle cx="190" cy="270" r="4" fill="#10b981"/>
+      <circle cx="90" cy="230" r="4" fill="#10b981"/><circle cx="62" cy="130" r="4" fill="#10b981"/>
+      <!-- Labels -->
+      <text x="190" y="18" text-anchor="middle" font-size="10" font-weight="500" fill="#374151">Accessibility</text>
+      <text x="360" y="108" text-anchor="start" font-size="10" font-weight="500" fill="#374151">Speed</text>
+      <text x="360" y="275" text-anchor="start" font-size="10" font-weight="500" fill="#374151">Explainability</text>
+      <text x="190" y="372" text-anchor="middle" font-size="10" font-weight="500" fill="#374151">Coverage</text>
+      <text x="22" y="275" text-anchor="end" font-size="10" font-weight="500" fill="#374151">Privacy</text>
+      <text x="22" y="108" text-anchor="end" font-size="10" font-weight="500" fill="#374151">Inclusivity</text>
+    </svg>
+    <div>
+      <div class="radar-legend">
+        <div class="radar-legend-item"><div class="radar-legend-dot" style="background:#10b981;"></div><strong style="font-weight:500;">Echo Bank</strong> — Leads on accessibility, inclusivity, speed, explainability</div>
+        <div class="radar-legend-item"><div class="radar-legend-dot" style="background:#9ca3af;"></div><strong style="font-weight:500;">Tala</strong> — Strong coverage but privacy concerns (phone surveillance)</div>
+        <div class="radar-legend-item"><div class="radar-legend-dot" style="background:#3b82f6;"></div><strong style="font-weight:500;">Upstart</strong> — Great speed & explainability but US-only, requires credit file</div>
+      </div>
+      <div style="margin-top:24px;padding:16px;background:var(--gray-50);border-radius:10px;">
+        <div style="font-size:11px;font-weight:500;color:var(--dark);margin-bottom:6px;">Key Insight</div>
+        <div style="font-size:13px;font-weight:300;color:var(--gray-500);line-height:1.6;">Echo Bank's voice-first approach uniquely maximizes <em>both</em> accessibility and inclusivity — dimensions where competitors must trade off. No literacy required, no smartphone data harvesting, and real-time explainable decisions.</div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-number-badge">06</div>
+</div>
+
+<!-- ====== SLIDE 8: VALUE ====== -->
+<div class="slide" data-slide="8">
+  <div class="slide-brand">Echo Bank</div>
+  <div class="section-label">Investment Thesis</div>
+  <h2>V.A.L.U.E. Framework <span class="highlight">Assessment</span></h2>
+  <div class="value-grid">
+    <div class="value-card">
+      <div class="value-letter">V</div><div class="value-title">Vertical Specificity</div>
+      <div class="value-desc">Deep in micro-lending for thin-file borrowers. The 8-dimension scoring engine, bilingual prompts, and character-based underwriting are domain-specific IP — not a thin LLM wrapper.</div>
+      <div class="value-verdict">Deep vertical, not a wrapper</div>
+    </div>
+    <div class="value-card">
+      <div class="value-letter">A</div><div class="value-title">Augmentation vs. Replacement</div>
+      <div class="value-desc">Augments human loan officers. AI generates the report; humans review and approve. Human-in-the-loop creates faster feedback loops and higher trust adoption.</div>
+      <div class="value-verdict">Augmentation — de-risks adoption</div>
+    </div>
+    <div class="value-card">
+      <div class="value-letter">L</div><div class="value-title">Proprietary Data Loop</div>
+      <div class="value-desc"><strong>The core moat.</strong> Every voice application creates a unique data triple: (voice features) + (extracted data) + (repayment outcome). This builds a proprietary dataset no competitor can replicate.</div>
+      <div class="value-verdict">Strong flywheel — defensible moat</div>
+    </div>
+    <div class="value-card">
+      <div class="value-letter">U</div><div class="value-title">User Experience</div>
+      <div class="value-desc">Voice is the existing workflow. 7B WhatsApp voice messages daily. Recording is more natural than forms — especially for populations with lower literacy or digital fluency.</div>
+      <div class="value-verdict">Native — voice IS the workflow</div>
+    </div>
+    <div class="value-card" style="grid-column:1/-1;">
+      <div class="value-letter">E</div><div class="value-title">Economic Unit Viability</div>
+      <div class="value-desc" style="max-width:680px;">Pipeline cost: ~$0.15/application (Whisper ~$0.006/min + GPT-4o ~$0.10-0.15). With model efficiency and potential Ollama/Llama migration, drops below $0.05. At $5-15 origination fee or 2-5% of loan value, unit economics are software-grade from day one.</div>
+      <div class="value-verdict">Software margins — API costs shrinking</div>
+    </div>
+  </div>
+  <div class="slide-number-badge">08</div>
+</div>
+
+<!-- ====== SLIDE 9: UNIT ECONOMICS ====== -->
+<div class="slide" data-slide="9">
+  <div class="slide-brand">Echo Bank</div>
+  <div class="section-label">Financial Analysis</div>
+  <h2>Unit <span class="highlight">Economics</span></h2>
+  <p class="subtitle" style="font-size:15px;">Revenue per application vs. cost structure — software margins from day one.</p>
+  <div style="display:flex;align-items:flex-start;gap:48px;margin-top:28px;">
+    <!-- Waterfall chart -->
+    <div style="flex:1;">
+      <div style="display:flex;align-items:flex-end;gap:8px;height:240px;padding-bottom:1px;border-bottom:2px solid var(--gray-200);">
+        <!-- Revenue bar -->
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;">
+          <div style="font-size:11px;font-weight:500;color:var(--emerald-dark);font-family:'JetBrains Mono',monospace;">$10.00</div>
+          <div style="width:52px;height:200px;background:linear-gradient(to top,#10b981,#34d399);border-radius:6px 6px 0 0;margin-top:4px;"></div>
+        </div>
+        <!-- Whisper cost -->
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;">
+          <div style="font-size:11px;font-weight:500;color:#dc2626;font-family:'JetBrains Mono',monospace;">-$0.01</div>
+          <div style="width:52px;height:2px;background:#ef4444;border-radius:0 0 6px 6px;margin-top:4px;"></div>
+        </div>
+        <!-- GPT-4o Extract -->
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;">
+          <div style="font-size:11px;font-weight:500;color:#dc2626;font-family:'JetBrains Mono',monospace;">-$0.05</div>
+          <div style="width:52px;height:10px;background:#ef4444;border-radius:0 0 6px 6px;margin-top:4px;"></div>
+        </div>
+        <!-- GPT-4o Underwrite -->
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;">
+          <div style="font-size:11px;font-weight:500;color:#dc2626;font-family:'JetBrains Mono',monospace;">-$0.10</div>
+          <div style="width:52px;height:20px;background:#ef4444;border-radius:0 0 6px 6px;margin-top:4px;"></div>
+        </div>
+        <!-- Infra -->
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;">
+          <div style="font-size:11px;font-weight:500;color:#dc2626;font-family:'JetBrains Mono',monospace;">-$0.02</div>
+          <div style="width:52px;height:4px;background:#ef4444;border-radius:0 0 6px 6px;margin-top:4px;"></div>
+        </div>
+        <!-- Gross Profit -->
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;">
+          <div style="font-size:11px;font-weight:500;color:var(--emerald-dark);font-family:'JetBrains Mono',monospace;">$9.82</div>
+          <div style="width:52px;height:196px;background:linear-gradient(to top,#059669,#10b981);border-radius:6px 6px 0 0;margin-top:4px;opacity:0.7;"></div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:8px;">
+        <div style="flex:1;text-align:center;font-size:11px;color:var(--gray-400);font-weight:400;">Revenue</div>
+        <div style="flex:1;text-align:center;font-size:11px;color:var(--gray-400);font-weight:400;">Whisper</div>
+        <div style="flex:1;text-align:center;font-size:11px;color:var(--gray-400);font-weight:400;">Extract</div>
+        <div style="flex:1;text-align:center;font-size:11px;color:var(--gray-400);font-weight:400;">Underwrite</div>
+        <div style="flex:1;text-align:center;font-size:11px;color:var(--gray-400);font-weight:400;">Infra</div>
+        <div style="flex:1;text-align:center;font-size:11px;color:var(--gray-400);font-weight:400;">Gross Profit</div>
+      </div>
+    </div>
+    <!-- Key metrics -->
+    <div style="width:280px;">
+      <h4 style="font-size:14px;">Key Metrics</h4>
+      <div style="margin-top:14px;">
+        <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--gray-100);font-size:14px;"><span style="color:var(--gray-400);">Revenue / decision</span><span class="mono" style="font-weight:500;color:var(--emerald-dark);">$5 – $15</span></div>
+        <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--gray-100);font-size:14px;"><span style="color:var(--gray-400);">COGS / decision</span><span class="mono" style="font-weight:500;">$0.18</span></div>
+        <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--gray-100);font-size:14px;"><span style="color:var(--gray-400);">Gross margin</span><span class="mono" style="font-weight:500;color:var(--emerald-dark);">98.2%</span></div>
+        <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--gray-100);font-size:14px;"><span style="color:var(--gray-400);">Break-even volume</span><span class="mono" style="font-weight:500;">~500 apps/mo</span></div>
+        <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--gray-100);font-size:14px;"><span style="color:var(--gray-400);">With fine-tuned model</span><span class="mono" style="font-weight:500;color:var(--emerald-dark);">$0.03 COGS</span></div>
+        <div style="display:flex;justify-content:space-between;padding:10px 0;font-size:14px;"><span style="color:var(--gray-400);">LTV:CAC target</span><span class="mono" style="font-weight:500;">8:1+</span></div>
+      </div>
+      <div style="margin-top:16px;padding:12px;background:var(--emerald-light);border-radius:8px;">
+        <p style="font-size:13px;color:var(--emerald-dark);font-weight:400;"><strong>Verdict:</strong> SaaS-grade margins. API costs are already negligible and declining. Fine-tuned model reduces COGS by 85%.</p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-number-badge">10</div>
+</div>
+
+<!-- ====== SLIDE 10: FLYWHEEL ====== -->
+<div class="slide" data-slide="10">
+  <div class="slide-brand">Echo Bank</div>
+  <div class="section-label">Defensibility</div>
+  <h2>The <span class="highlight">Data Flywheel</span></h2>
+  <p class="subtitle">Every application makes the model smarter. Every decision generates proprietary training data.</p>
+  <div class="flywheel">
+    <div class="flywheel-center"><div style="font-size:28px;">🔄</div><div style="font-size:13px;font-weight:500;color:var(--dark);margin-top:6px;">Proprietary<br>Data Loop</div></div>
+    <div class="flywheel-node" style="top:-16px;left:50%;transform:translateX(-50%);"><strong>🎙️ Voice Input</strong>Raw audio + transcript</div>
+    <div class="flywheel-node" style="top:50%;right:-24px;transform:translateY(-50%);"><strong>🧠 AI Scoring</strong>8-dimension analysis</div>
+    <div class="flywheel-node" style="bottom:-16px;left:50%;transform:translateX(-50%);"><strong>💰 Outcome</strong>Repayment / Default</div>
+    <div class="flywheel-node" style="top:50%;left:-24px;transform:translateY(-50%);"><strong>📈 Model Update</strong>Fine-tune on outcomes</div>
+  </div>
+  <div class="two-col" style="margin-top:0;">
+    <div><h4 style="font-size:15px;">Phase 1: Foundation Model</h4><p style="font-size:13px;margin-top:6px;">GPT-4o provides strong zero-shot underwriting. Good enough to launch, collect data, and validate the approach.</p></div>
+    <div><h4 style="font-size:15px;">Phase 2: Fine-Tuned Model</h4><p style="font-size:13px;margin-top:6px;">After 10K+ applications with outcome data, fine-tune a proprietary model. Voice features + repayment data = unique moat.</p></div>
+  </div>
+  <div class="slide-number-badge">11</div>
+</div>
+
+<!-- ====== SLIDE 11: MOCKUPS ====== -->
+<div class="slide" data-slide="11">
+  <div class="slide-brand">Echo Bank</div>
+  <div class="section-label">Product</div>
+  <h2>Three screens. <span class="highlight">One experience.</span></h2>
+  <p class="subtitle">Record → Analyze → Decide. Under 60 seconds.</p>
+  <div class="mockup-row">
+    <div>
+      <div class="mockup-frame">
+        <div class="mockup-browser-bar"><div class="mockup-dot"></div><div class="mockup-dot"></div><div class="mockup-dot"></div><div class="mockup-url">echobank.app</div></div>
+        <div class="mockup-content">
+          <div style="font-size:16px;font-weight:300;color:var(--dark);margin-bottom:12px;">Your voice is your <span style="color:var(--emerald);">loan application</span></div>
+          <div class="mockup-btn">🎙️</div>
+          <div class="mockup-title">Tap to start recording</div>
+          <div class="mockup-sub" style="padding:6px;background:var(--gray-50);border-radius:6px;margin-top:6px;">Tell us about yourself...</div>
+        </div>
+      </div>
+      <div class="mockup-label">1. Record</div>
+    </div>
+    <div>
+      <div class="mockup-frame">
+        <div class="mockup-browser-bar"><div class="mockup-dot"></div><div class="mockup-dot"></div><div class="mockup-dot"></div><div class="mockup-url">echobank.app</div></div>
+        <div class="mockup-content">
+          <div style="font-size:13px;font-weight:400;color:var(--dark);margin-bottom:12px;">Analyzing...</div>
+          <div style="display:flex;flex-direction:column;gap:10px;text-align:left;">
+            <div style="display:flex;align-items:center;gap:6px;"><div style="width:18px;height:18px;border-radius:50%;background:var(--emerald);color:white;font-size:9px;display:flex;align-items:center;justify-content:center;">✓</div><span style="font-size:11px;color:var(--gray-500);">Transcribing</span></div>
+            <div style="display:flex;align-items:center;gap:6px;"><div style="width:18px;height:18px;border-radius:50%;background:var(--emerald);color:white;font-size:9px;display:flex;align-items:center;justify-content:center;">✓</div><span style="font-size:11px;color:var(--gray-500);">Extracting Data</span></div>
+            <div style="display:flex;align-items:center;gap:6px;"><div style="width:18px;height:18px;border-radius:50%;background:var(--amber);color:white;font-size:9px;display:flex;align-items:center;justify-content:center;">⋯</div><span style="font-size:11px;color:var(--dark);font-weight:400;">Underwriting</span></div>
+          </div>
+          <div class="mockup-score-bar" style="margin-top:16px;"><div class="mockup-score-fill" style="width:72%;"></div></div>
+        </div>
+      </div>
+      <div class="mockup-label">2. Analyze</div>
+    </div>
+    <div>
+      <div class="mockup-frame">
+        <div class="mockup-browser-bar"><div class="mockup-dot"></div><div class="mockup-dot"></div><div class="mockup-dot"></div><div class="mockup-url">echobank.app/report</div></div>
+        <div class="mockup-content" style="text-align:left;">
+          <div style="text-align:center;margin-bottom:10px;"><span class="pill pill-green" style="font-size:10px;">✓ APPROVED</span></div>
+          <div style="font-size:10px;color:var(--gray-400);margin-bottom:6px;">SCORECARD</div>
+          <div style="font-size:9px;display:flex;justify-content:space-between;color:var(--gray-500);"><span>Education</span><span style="color:var(--dark);">8.0</span></div>
+          <div class="mockup-score-bar"><div class="mockup-score-fill" style="width:80%;"></div></div>
+          <div style="font-size:9px;display:flex;justify-content:space-between;color:var(--gray-500);margin-top:6px;"><span>Character</span><span style="color:var(--dark);">7.5</span></div>
+          <div class="mockup-score-bar"><div class="mockup-score-fill" style="width:75%;"></div></div>
+          <div style="font-size:9px;display:flex;justify-content:space-between;color:var(--gray-500);margin-top:6px;"><span>Income Potential</span><span style="color:var(--dark);">7.0</span></div>
+          <div class="mockup-score-bar"><div class="mockup-score-fill" style="width:70%;"></div></div>
+          <div style="margin-top:10px;padding:6px;background:var(--gray-50);border-radius:6px;">
+            <div style="font-size:9px;color:var(--gray-400);">Weighted Score</div>
+            <div style="font-size:18px;font-weight:300;color:var(--emerald);">7.2 <span style="font-size:9px;color:var(--gray-400);">/ 10</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="mockup-label">3. Decision</div>
+    </div>
+  </div>
+  <div class="slide-number-badge">11</div>
+</div>
+
+<!-- ====== SLIDE 12: GTM ====== -->
+<div class="slide" data-slide="12">
+  <div class="slide-brand">Echo Bank</div>
+  <div class="section-label">Go to Market</div>
+  <h2>Two markets. Two <span class="highlight">paths</span> to revenue.</h2>
+  <p class="subtitle">Launch pilot in Mexico + USA, then license the engine.</p>
+  <div class="two-col">
+    <div class="stat-card">
+      <h4 style="font-size:18px;">🇲🇽 Mexico — Direct Lending</h4>
+      <p style="font-size:14px;margin-top:10px;">Micro-loans ($100–$5,000) to professionals, students, micro-entrepreneurs. 54M+ adults lack credit access.</p>
+      <div style="margin-top:14px;font-size:14px;">
+        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--gray-100);"><span style="color:var(--gray-400);">Avg. loan size</span><span style="font-weight:400;">$1,000–$3,000 MXN equiv.</span></div>
+        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--gray-100);"><span style="color:var(--gray-400);">Revenue model</span><span style="font-weight:400;">Interest spread (12–25% APR)</span></div>
+        <div style="display:flex;justify-content:space-between;padding:8px 0;"><span style="color:var(--gray-400);">Advantage</span><span style="font-weight:400;">Lighter regulation, massive need</span></div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <h4 style="font-size:18px;">🇺🇸 USA — B2B Platform</h4>
+      <p style="font-size:14px;margin-top:10px;">White-label voice underwriting API for banks, fintechs, MFIs serving the 45M credit-invisible Americans.</p>
+      <div style="margin-top:14px;font-size:14px;">
+        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--gray-100);"><span style="color:var(--gray-400);">API price per decision</span><span style="font-weight:400;">$5–$15</span></div>
+        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--gray-100);"><span style="color:var(--gray-400);">Target customers</span><span style="font-weight:400;">CDFIs, community banks, fintechs</span></div>
+        <div style="display:flex;justify-content:space-between;padding:8px 0;"><span style="color:var(--gray-400);">Gross margin</span><span style="font-weight:400;">85%+ (SaaS)</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-number-badge">12</div>
+</div>
+
+<!-- ====== SLIDE 13: RISK MATRIX ====== -->
+<div class="slide" data-slide="13">
+  <div class="slide-brand">Echo Bank</div>
+  <div class="section-label">Risk Assessment</div>
+  <h2>Risk <span class="highlight">Matrix</span></h2>
+  <p class="subtitle" style="font-size:15px;">Likelihood vs. impact analysis of key business risks.</p>
+  <div style="display:flex;align-items:flex-start;gap:48px;margin-top:24px;">
+    <div style="position:relative;">
+      <!-- Y-axis label -->
+      <div style="position:absolute;left:-50px;top:50%;transform:translateY(-50%) rotate(-90deg);font-size:12px;font-weight:500;color:var(--gray-400);letter-spacing:0.1em;text-transform:uppercase;white-space:nowrap;">Impact →</div>
+      <!-- X-axis label -->
+      <div style="text-align:center;margin-top:8px;font-size:12px;font-weight:500;color:var(--gray-400);letter-spacing:0.1em;text-transform:uppercase;">Likelihood →</div>
+      <div style="display:grid;grid-template-columns:repeat(4,120px);grid-template-rows:repeat(4,80px);gap:3px;margin-left:20px;">
+        <!-- Row 1: Critical impact -->
+        <div class="risk-cell risk-yellow" style="position:relative;">
+          <div class="risk-cell-content">LLM hallucination<br>in scoring</div>
+        </div>
+        <div class="risk-cell risk-orange">
+          <div class="risk-cell-content">OpenAI API<br>cost spike</div>
+        </div>
+        <div class="risk-cell risk-red">
+          <div class="risk-cell-content">Regulatory<br>ban on AI lending</div>
+        </div>
+        <div class="risk-cell risk-red">
+          <div class="risk-cell-content">Disparate impact<br>lawsuit</div>
+        </div>
+        <!-- Row 2: High impact -->
+        <div class="risk-cell risk-green">
+          <div class="risk-cell-content">Data breach /<br>voice leak</div>
+        </div>
+        <div class="risk-cell risk-yellow">
+          <div class="risk-cell-content">Competitor copies<br>voice approach</div>
+        </div>
+        <div class="risk-cell risk-orange">
+          <div class="risk-cell-content">Default rates<br>above forecast</div>
+        </div>
+        <div class="risk-cell risk-red">
+          <div class="risk-cell-content">Big tech enters<br>voice lending</div>
+        </div>
+        <!-- Row 3: Medium impact -->
+        <div class="risk-cell risk-green">
+          <div class="risk-cell-content">Whisper accuracy<br>degradation</div>
+        </div>
+        <div class="risk-cell risk-green">
+          <div class="risk-cell-content">User adoption<br>slower than expected</div>
+        </div>
+        <div class="risk-cell risk-yellow">
+          <div class="risk-cell-content">State-level<br>enforcement action</div>
+        </div>
+        <div class="risk-cell risk-orange">
+          <div class="risk-cell-content">Key hire<br>retention risk</div>
+        </div>
+        <!-- Row 4: Low impact -->
+        <div class="risk-cell risk-green">
+          <div class="risk-cell-content">Brand<br>confusion</div>
+        </div>
+        <div class="risk-cell risk-green">
+          <div class="risk-cell-content">Infrastructure<br>downtime</div>
+        </div>
+        <div class="risk-cell risk-green">
+          <div class="risk-cell-content">Browser compat.<br>issues</div>
+        </div>
+        <div class="risk-cell risk-yellow">
+          <div class="risk-cell-content">Feature<br>scope creep</div>
+        </div>
+      </div>
+      <!-- Axis labels -->
+      <div style="display:flex;justify-content:space-between;margin-left:20px;margin-top:4px;width:492px;">
+        <span style="font-size:11px;color:var(--gray-400);">Unlikely</span>
+        <span style="font-size:11px;color:var(--gray-400);">Possible</span>
+        <span style="font-size:11px;color:var(--gray-400);">Likely</span>
+        <span style="font-size:11px;color:var(--gray-400);">Very Likely</span>
+      </div>
+      <div style="position:absolute;left:20px;top:0;display:flex;flex-direction:column;justify-content:space-between;height:332px;">
+        <span style="font-size:11px;color:var(--gray-400);transform:translateX(-100%) translateX(-8px);white-space:nowrap;">Critical</span>
+        <span style="font-size:11px;color:var(--gray-400);transform:translateX(-100%) translateX(-8px);white-space:nowrap;">High</span>
+        <span style="font-size:11px;color:var(--gray-400);transform:translateX(-100%) translateX(-8px);white-space:nowrap;">Medium</span>
+        <span style="font-size:11px;color:var(--gray-400);transform:translateX(-100%) translateX(-8px);white-space:nowrap;">Low</span>
+      </div>
+    </div>
+    <div style="width:240px;">
+      <h4 style="font-size:14px;">Mitigations</h4>
+      <div style="margin-top:12px;font-size:13px;line-height:1.6;color:var(--gray-500);font-weight:300;">
+        <div style="padding:8px;border-left:3px solid var(--red);margin-bottom:8px;">
+          <strong style="color:var(--dark);font-weight:500;">Regulatory risk</strong><br>Explainable scoring + text-only analysis + regular audits
+        </div>
+        <div style="padding:8px;border-left:3px solid var(--amber);margin-bottom:8px;">
+          <strong style="color:var(--dark);font-weight:500;">Supplier lock-in</strong><br>Ollama fallback built today; fine-tuned model by Year 2
+        </div>
+        <div style="padding:8px;border-left:3px solid var(--amber);margin-bottom:8px;">
+          <strong style="color:var(--dark);font-weight:500;">Default prediction</strong><br>Conservative initial limits; outcome-based model retraining
+        </div>
+        <div style="padding:8px;border-left:3px solid var(--emerald);">
+          <strong style="color:var(--dark);font-weight:500;">Competition</strong><br>Data flywheel moat; 10K+ voice→outcome pairs = irreplicable
+        </div>
+      </div>
+      <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;">
+        <span style="font-size:11px;padding:3px 8px;border-radius:4px;background:rgba(16,185,129,0.1);color:var(--emerald-dark);">Low risk</span>
+        <span style="font-size:11px;padding:3px 8px;border-radius:4px;background:rgba(245,158,11,0.1);color:#92400e;">Medium</span>
+        <span style="font-size:11px;padding:3px 8px;border-radius:4px;background:rgba(249,115,22,0.1);color:#c2410c;">High</span>
+        <span style="font-size:11px;padding:3px 8px;border-radius:4px;background:rgba(239,68,68,0.1);color:#991b1b;">Critical</span>
+      </div>
+    </div>
+  </div>
+  <div class="slide-number-badge">15</div>
+</div>
+
+<!-- ====== SLIDE 14: THE ASK ====== -->
+<div class="slide slide-dark" data-slide="14">
+  <div class="slide-brand" style="color:rgba(255,255,255,0.3);">Echo Bank</div>
+  <div class="section-label">The Ask</div>
+  <h2 style="font-size:44px;">Building the credit bureau<br>for the <span class="highlight">voice-first</span> world.</h2>
+  <div style="margin-top:40px;">
+    <p style="color:rgba(255,255,255,0.5);font-size:18px;">We're raising a <strong style="color:white;font-weight:400;">pre-seed round</strong> to:</p>
+    <ul style="list-style:none;margin-top:20px;">
+      <li style="padding:10px 0;color:rgba(255,255,255,0.7);font-size:16px;font-weight:300;border-bottom:1px solid rgba(255,255,255,0.08);"><span style="color:var(--emerald);margin-right:10px;">01</span> Launch pilot with 1,000 borrowers in Mexico City + US Hispanic communities</li>
+      <li style="padding:10px 0;color:rgba(255,255,255,0.7);font-size:16px;font-weight:300;border-bottom:1px solid rgba(255,255,255,0.08);"><span style="color:var(--emerald);margin-right:10px;">02</span> Build the voice→repayment outcome dataset that becomes our moat</li>
+      <li style="padding:10px 0;color:rgba(255,255,255,0.7);font-size:16px;font-weight:300;border-bottom:1px solid rgba(255,255,255,0.08);"><span style="color:var(--emerald);margin-right:10px;">03</span> Fine-tune proprietary voice-to-credit model</li>
+      <li style="padding:10px 0;color:rgba(255,255,255,0.7);font-size:16px;font-weight:300;"><span style="color:var(--emerald);margin-right:10px;">04</span> Achieve FCRA/ECOA compliance for US bank partnerships</li>
+    </ul>
+  </div>
+  <p style="margin-top:40px;font-size:22px;font-weight:300;color:rgba(255,255,255,0.8);">
+    Let's give <span style="color:var(--emerald);">1.4 billion people</span> a voice in the financial system.
+  </p>
+  <div class="slide-number-badge" style="color:rgba(255,255,255,0.2);">14</div>
+</div>
+
+<!-- ====== APPENDIX A1: HOW IT WORKS ====== -->
+<div class="slide" data-slide="15">
+  <div class="slide-brand">Echo Bank</div>
+  <div style="font-size:12px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:var(--gray-400);margin-bottom:8px;">Appendix A</div>
+  <h2>How the Product <span class="highlight">Works</span></h2>
+  <div class="arch-flow">
+    <div class="arch-node arch-user"><div class="arch-node-label">👤 Applicant</div><div class="arch-node-sub">Records voice memo<br>in browser (EN/ES)</div></div>
+    <div class="arch-arrow">→</div>
+    <div class="arch-node arch-frontend"><div class="arch-node-label">🌐 Next.js</div><div class="arch-node-sub">MediaRecorder API<br>WebM/MP4</div></div>
+    <div class="arch-arrow">→</div>
+    <div class="arch-node arch-api"><div class="arch-node-label">⚡ API Route</div><div class="arch-node-sub">SSE streaming<br>FormData upload</div></div>
+    <div class="arch-arrow">→</div>
+    <div class="arch-node arch-ai"><div class="arch-node-label">🎤 Whisper</div><div class="arch-node-sub">Speech-to-text<br>Language detect</div></div>
+    <div class="arch-arrow">→</div>
+    <div class="arch-node arch-ai"><div class="arch-node-label">🧠 GPT-4o</div><div class="arch-node-sub">Extract data<br>+ Underwrite</div></div>
+    <div class="arch-arrow">→</div>
+    <div class="arch-node arch-output"><div class="arch-node-label">📋 Report</div><div class="arch-node-sub">8-dim score<br>Decision + terms</div></div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:24px;">
+    <div class="stat-card" style="padding:16px;"><div style="font-size:20px;">1️⃣</div><div style="font-size:13px;font-weight:500;margin-top:6px;">Upload</div><div style="font-size:11px;color:var(--gray-400);margin-top:3px;">Validate format & size (&lt;25MB)</div></div>
+    <div class="stat-card" style="padding:16px;"><div style="font-size:20px;">2️⃣</div><div style="font-size:13px;font-weight:500;margin-top:6px;">Transcribe</div><div style="font-size:11px;color:var(--gray-400);margin-top:3px;">Whisper-1 → text + language + duration</div></div>
+    <div class="stat-card" style="padding:16px;"><div style="font-size:20px;">3️⃣</div><div style="font-size:13px;font-weight:500;margin-top:6px;">Extract</div><div style="font-size:11px;color:var(--gray-400);margin-top:3px;">GPT-4o → structured JSON (Zod validated)</div></div>
+    <div class="stat-card" style="padding:16px;"><div style="font-size:20px;">4️⃣</div><div style="font-size:13px;font-weight:500;margin-top:6px;">Underwrite</div><div style="font-size:11px;color:var(--gray-400);margin-top:3px;">8 scores + decision + terms + stress test</div></div>
+  </div>
+  <div class="slide-number-badge">A1</div>
+</div>
+
+<!-- ====== APPENDIX A2: SCORING ====== -->
+<div class="slide" data-slide="16">
+  <div class="slide-brand">Echo Bank</div>
+  <div style="font-size:12px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:var(--gray-400);margin-bottom:8px;">Appendix A — continued</div>
+  <h2>8-Dimension <span class="highlight">Scoring Engine</span></h2>
+  <div class="score-dim">
+    <div class="score-dim-card"><div style="display:flex;justify-content:space-between;"><div class="score-dim-title">Education & Institutional Quality</div><div class="score-dim-weight">w: 0.15</div></div><div class="score-dim-desc">Quality of educational institutions, relevance of degree to earning potential.</div></div>
+    <div class="score-dim-card"><div style="display:flex;justify-content:space-between;"><div class="score-dim-title">Professional Network & Social Capital</div><div class="score-dim-weight">w: 0.10</div></div><div class="score-dim-desc">Quality of past and prospective employers, industry connections.</div></div>
+    <div class="score-dim-card"><div style="display:flex;justify-content:space-between;"><div class="score-dim-title">Character & Communication Quality</div><div class="score-dim-weight">w: 0.15</div></div><div class="score-dim-desc">Clarity, organization, honesty signals, self-awareness of the voice application.</div></div>
+    <div class="score-dim-card"><div style="display:flex;justify-content:space-between;"><div class="score-dim-title">Income Stability & Earning Potential</div><div class="score-dim-weight">w: 0.20</div></div><div class="score-dim-desc">Current income evidence, future trajectory, industry salary expectations. Highest weight.</div></div>
+    <div class="score-dim-card"><div style="display:flex;justify-content:space-between;"><div class="score-dim-title">Collateral & Asset Base</div><div class="score-dim-weight">w: 0.05</div></div><div class="score-dim-desc">Any assets or collateral mentioned. Low weight — character &gt; collateral.</div></div>
+    <div class="score-dim-card"><div style="display:flex;justify-content:space-between;"><div class="score-dim-title">Debt-to-Income Ratio (est.)</div><div class="score-dim-weight">w: 0.10</div></div><div class="score-dim-desc">Estimated from loan amount vs. expected income. Critical safety dimension.</div></div>
+    <div class="score-dim-card"><div style="display:flex;justify-content:space-between;"><div class="score-dim-title">Purpose Alignment</div><div class="score-dim-weight">w: 0.10</div></div><div class="score-dim-desc">Does the loan increase earning capacity (education, business) or is it consumptive?</div></div>
+    <div class="score-dim-card"><div style="display:flex;justify-content:space-between;"><div class="score-dim-title">Repayment Plan Credibility</div><div class="score-dim-weight">w: 0.15</div></div><div class="score-dim-desc">Specificity and realism of repayment strategy. Has the applicant thought it through?</div></div>
+  </div>
+  <div style="margin-top:16px;padding:14px;background:var(--gray-50);border-radius:10px;font-size:12px;color:var(--gray-500);">
+    <strong style="color:var(--dark);font-weight:500;">Decision Rules:</strong>
+    <span class="pill pill-green" style="margin-left:6px;">Approve: ≥ 6.5, no dim &lt; 3</span>
+    <span class="pill pill-amber" style="margin-left:6px;">More Info: 4.5–6.5</span>
+    <span class="pill pill-red" style="margin-left:6px;">Decline: &lt; 4.5 or critical &lt; 2</span>
+  </div>
+  <div class="slide-number-badge">A2</div>
+</div>
+
+<!-- ====== APPENDIX B: SCIENCE ====== -->
+<div class="slide" data-slide="17">
+  <div class="slide-brand">Echo Bank</div>
+  <div style="font-size:12px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:var(--gray-400);margin-bottom:8px;">Appendix B</div>
+  <h2>The <span class="highlight">Science</span></h2>
+  <p class="subtitle" style="font-size:16px;">Peer-reviewed research supporting voice-based credit assessment.</p>
+  <div class="two-col" style="gap:40px;margin-top:28px;">
+    <div>
+      <h4 style="font-size:14px;">Loan Text → Default Prediction</h4>
+      <div class="citation" style="margin-top:12px;"><strong>Netzer, Lemaire, Herzenstein (2019)</strong> — "When Words Sweat." <em>J. Marketing Research, 56(6).</em> Loan application text predicts default beyond financial variables. <strong style="color:var(--emerald-dark);">Most directly relevant paper.</strong></div>
+      <h4 style="font-size:14px;margin-top:16px;">Voice → Personality → Behavior</h4>
+      <div class="citation"><strong>Schuller et al.</strong> — INTERSPEECH Computational Paralinguistics (2009–present). Acoustic features predict Big Five traits from speech.</div>
+      <div class="citation"><strong>Pentland, A. (2008)</strong> — "Honest Signals" MIT Press. Non-linguistic vocal features predict social/economic outcomes.</div>
+      <div class="citation"><strong>McAleer et al. (2014)</strong> — Personality + trustworthiness from a single "hello." <em>PLoS ONE.</em></div>
+    </div>
+    <div>
+      <h4 style="font-size:14px;">Voice → Financial Outcomes</h4>
+      <div class="citation" style="margin-top:12px;"><strong>Mayew & Venkatachalam (2012)</strong> — Vocal affect in earnings calls predicts firm performance. <em>J. Finance, 67(1).</em></div>
+      <div class="citation"><strong>Hobson et al. (2012)</strong> — Vocal dissonance predicts financial fraud. <em>J. Accounting Research, 50(2).</em></div>
+      <h4 style="font-size:14px;margin-top:16px;">Alternative Data → Credit</h4>
+      <div class="citation"><strong>Berg et al. (2020)</strong> — Digital behavioral data predicts creditworthiness as well as FICO for thin-file. <em>Rev. Financial Studies, 33(7).</em></div>
+      <div class="citation"><strong>Bjorkegren & Grissen (2020)</strong> — Phone usage predicts loan default in developing countries. <em>World Bank Econ. Review, 34(3).</em></div>
+      <div class="citation"><strong>Klinger & Khwaja (2013)</strong> — Psychometric tests predict SME loan repayment in Peru/Colombia. Springer.</div>
+    </div>
+  </div>
+  <div style="margin-top:20px;padding:12px;background:var(--emerald-light);border-radius:10px;">
+    <p style="font-size:12px;color:var(--emerald-dark);font-weight:400;"><strong>Convergence thesis:</strong> Voice → personality (Schuller). Personality → financial behavior (Klinger). Loan text → default (Netzer). Voice in finance → outcomes (Mayew, Hobson). Echo Bank sits at the intersection of all four.</p>
+  </div>
+  <div class="slide-number-badge">B</div>
+</div>
+
+<!-- ====== APPENDIX C1: TECH ====== -->
+<div class="slide" data-slide="18">
+  <div class="slide-brand">Echo Bank</div>
+  <div style="font-size:12px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:var(--gray-400);margin-bottom:8px;">Appendix C</div>
+  <h2>Technical <span class="highlight">Deep Dive</span></h2>
+  <div class="two-col" style="gap:40px;margin-top:28px;">
+    <div>
+      <h4 style="font-size:14px;">Stack</h4>
+      <div style="margin-top:10px;font-size:12px;">
+        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--gray-100);"><span style="color:var(--gray-400);">Framework</span><span class="mono" style="font-size:11px;">Next.js 16 (App Router)</span></div>
+        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--gray-100);"><span style="color:var(--gray-400);">Language</span><span class="mono" style="font-size:11px;">TypeScript (strict)</span></div>
+        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--gray-100);"><span style="color:var(--gray-400);">Styling</span><span class="mono" style="font-size:11px;">Tailwind CSS v4 + shadcn/ui</span></div>
+        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--gray-100);"><span style="color:var(--gray-400);">Transcription</span><span class="mono" style="font-size:11px;">OpenAI Whisper-1 API</span></div>
+        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--gray-100);"><span style="color:var(--gray-400);">LLM (extract)</span><span class="mono" style="font-size:11px;">GPT-4o (temp: 0.1)</span></div>
+        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--gray-100);"><span style="color:var(--gray-400);">LLM (underwrite)</span><span class="mono" style="font-size:11px;">GPT-4o (temp: 0.3)</span></div>
+        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--gray-100);"><span style="color:var(--gray-400);">Validation</span><span class="mono" style="font-size:11px;">Zod schemas (runtime)</span></div>
+        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--gray-100);"><span style="color:var(--gray-400);">Streaming</span><span class="mono" style="font-size:11px;">Server-Sent Events (SSE)</span></div>
+        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--gray-100);"><span style="color:var(--gray-400);">Deployment</span><span class="mono" style="font-size:11px;">Vercel (serverless)</span></div>
+        <div style="display:flex;justify-content:space-between;padding:8px 0;"><span style="color:var(--gray-400);">LLM fallback</span><span class="mono" style="font-size:11px;">Ollama (local, open-weight)</span></div>
+      </div>
+    </div>
+    <div>
+      <h4 style="font-size:14px;">Key Engineering Decisions</h4>
+      <ul class="feature-list" style="font-size:12px;">
+        <li style="padding:10px 0;"><div class="feature-icon" style="font-size:11px;">🔌</div><div><strong style="font-weight:500;font-size:12px;">LLM Provider Abstraction</strong><br><span style="font-size:11px;">Hot-swappable OpenAI ↔ Ollama via env var.</span></div></li>
+        <li style="padding:10px 0;"><div class="feature-icon" style="font-size:11px;">📡</div><div><strong style="font-weight:500;font-size:12px;">Server-Sent Events (SSE)</strong><br><span style="font-size:11px;">Real-time pipeline progress. Builds trust during 30-60s processing.</span></div></li>
+        <li style="padding:10px 0;"><div class="feature-icon" style="font-size:11px;">🔄</div><div><strong style="font-weight:500;font-size:12px;">Retry with self-correction</strong><br><span style="font-size:11px;">3× retry with increasingly explicit JSON instructions.</span></div></li>
+        <li style="padding:10px 0;"><div class="feature-icon" style="font-size:11px;">✅</div><div><strong style="font-weight:500;font-size:12px;">Zod Runtime Validation</strong><br><span style="font-size:11px;">Every LLM output validated before reaching frontend.</span></div></li>
+        <li style="padding:10px 0;"><div class="feature-icon" style="font-size:11px;">🎤</div><div><strong style="font-weight:500;font-size:12px;">Cross-browser recording</strong><br><span style="font-size:11px;">WebM/Opus → MP4 for Safari. Auto .ogg rename for Whisper.</span></div></li>
+      </ul>
+    </div>
+  </div>
+  <div class="slide-number-badge">C1</div>
+</div>
+
+<!-- ====== APPENDIX C2: STATE FLOW ====== -->
+<div class="slide" data-slide="19">
+  <div class="slide-brand">Echo Bank</div>
+  <div style="font-size:12px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:var(--gray-400);margin-bottom:8px;">Appendix C — continued</div>
+  <h2>Application <span class="highlight">State Flow</span></h2>
+  <div style="margin-top:32px;display:grid;grid-template-columns:1fr 1fr;gap:28px;">
+    <div>
+      <h4 style="font-size:13px;color:var(--gray-400);text-transform:uppercase;letter-spacing:0.1em;">Frontend State Machine</h4>
+      <div style="margin-top:12px;display:flex;flex-direction:column;gap:6px;">
+        <div style="display:flex;align-items:center;gap:10px;"><div style="width:10px;height:10px;border-radius:50%;background:var(--gray-300);"></div><div style="flex:1;padding:10px 14px;background:var(--gray-50);border-radius:7px;border:1px solid var(--gray-100);"><div style="font-size:12px;font-weight:500;">IDLE</div><div style="font-size:10px;color:var(--gray-400);">Landing page → record button visible</div></div></div>
+        <div style="text-align:center;color:var(--gray-300);font-size:12px;">↓ <span style="font-size:9px;color:var(--gray-400);">tap record</span></div>
+        <div style="display:flex;align-items:center;gap:10px;"><div style="width:10px;height:10px;border-radius:50%;background:var(--red);"></div><div style="flex:1;padding:10px 14px;background:#fef2f2;border-radius:7px;border:1px solid #fecaca;"><div style="font-size:12px;font-weight:500;">RECORDING</div><div style="font-size:10px;color:var(--gray-400);">MediaRecorder active, timer, pulsing UI</div></div></div>
+        <div style="text-align:center;color:var(--gray-300);font-size:12px;">↓ <span style="font-size:9px;color:var(--gray-400);">tap stop</span></div>
+        <div style="display:flex;align-items:center;gap:10px;"><div style="width:10px;height:10px;border-radius:50%;background:var(--emerald);"></div><div style="flex:1;padding:10px 14px;background:#ecfdf5;border-radius:7px;border:1px solid #a7f3d0;"><div style="font-size:12px;font-weight:500;">FILE READY</div><div style="font-size:10px;color:var(--gray-400);">Preview + "Analyze My Application" CTA</div></div></div>
+        <div style="text-align:center;color:var(--gray-300);font-size:12px;">↓ <span style="font-size:9px;color:var(--gray-400);">tap analyze</span></div>
+        <div style="display:flex;align-items:center;gap:10px;"><div style="width:10px;height:10px;border-radius:50%;background:var(--amber);"></div><div style="flex:1;padding:10px 14px;background:#fffbeb;border-radius:7px;border:1px solid #fde68a;"><div style="font-size:12px;font-weight:500;">PROCESSING</div><div style="font-size:10px;color:var(--gray-400);">SSE: upload → transcribe → extract → underwrite</div></div></div>
+        <div style="text-align:center;color:var(--gray-300);font-size:12px;">↓ <span style="font-size:9px;color:var(--gray-400);">complete</span></div>
+        <div style="display:flex;align-items:center;gap:10px;"><div style="width:10px;height:10px;border-radius:50%;background:var(--blue);"></div><div style="flex:1;padding:10px 14px;background:#eff6ff;border-radius:7px;border:1px solid #bfdbfe;"><div style="font-size:12px;font-weight:500;">REPORT</div><div style="font-size:10px;color:var(--gray-400);">Navigate to /report/[id]</div></div></div>
+      </div>
+    </div>
+    <div>
+      <h4 style="font-size:13px;color:var(--gray-400);text-transform:uppercase;letter-spacing:0.1em;">Backend Pipeline (SSE)</h4>
+      <div style="margin-top:12px;display:flex;flex-direction:column;gap:6px;">
+        <div style="padding:14px;background:var(--gray-50);border-radius:7px;border:1px solid var(--gray-100);"><div style="display:flex;justify-content:space-between;"><div style="font-size:12px;font-weight:500;">POST /api/process</div><span class="mono" style="font-size:9px;color:var(--gray-400);">FormData</span></div><div style="font-size:10px;color:var(--gray-400);margin-top:3px;">Validates extension + size</div></div>
+        <div style="padding:14px;background:#fef3c7;border-radius:7px;border:1px solid #fde68a;"><div style="display:flex;justify-content:space-between;"><div style="font-size:12px;font-weight:500;">Whisper API</div><span class="mono" style="font-size:9px;color:var(--gray-400);">~$0.006/min</span></div><div style="font-size:10px;color:var(--gray-400);margin-top:3px;">→ { text, language, duration }</div></div>
+        <div style="padding:14px;background:#dbeafe;border-radius:7px;border:1px solid #bfdbfe;"><div style="display:flex;justify-content:space-between;"><div style="font-size:12px;font-weight:500;">GPT-4o: Extraction</div><span class="mono" style="font-size:9px;color:var(--gray-400);">temp: 0.1</span></div><div style="font-size:10px;color:var(--gray-400);margin-top:3px;">transcript → LoanApplication (Zod)</div></div>
+        <div style="padding:14px;background:#ecfdf5;border-radius:7px;border:1px solid #a7f3d0;"><div style="display:flex;justify-content:space-between;"><div style="font-size:12px;font-weight:500;">GPT-4o: Underwriting</div><span class="mono" style="font-size:9px;color:var(--gray-400);">temp: 0.3</span></div><div style="font-size:10px;color:var(--gray-400);margin-top:3px;">LoanApplication → UnderwritingResult (Zod)</div></div>
+        <div style="padding:14px;background:#fce7f3;border-radius:7px;border:1px solid #fbcfe8;"><div style="display:flex;justify-content:space-between;"><div style="font-size:12px;font-weight:500;">Report Assembly</div><span class="mono" style="font-size:9px;color:var(--gray-400);">nanoid(12)</span></div><div style="font-size:10px;color:var(--gray-400);margin-top:3px;">→ FullReport → SSE "complete" event</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-number-badge">C2</div>
+</div>
+
+<!-- ====== APPENDIX D: REGULATORY ====== -->
+<div class="slide" data-slide="20">
+  <div class="slide-brand">Echo Bank</div>
+  <div style="font-size:12px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:var(--gray-400);margin-bottom:8px;">Appendix D</div>
+  <h2>US Regulatory & <span class="highlight">Fair Lending</span> Analysis</h2>
+  <p class="subtitle" style="font-size:15px;">FCRA, ECOA, and CFPB guidance on AI-powered credit decisions.</p>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:28px;">
+    <div class="reg-card">
+      <div class="reg-title">Fair Credit Reporting Act (FCRA)</div>
+      <div class="reg-desc">Requires specific, accurate adverse action notices when denying credit. CFPB Circular 2023-03: AI complexity is <strong>not</strong> an excuse — lenders must explain <em>why</em> in plain language, not broad buckets. Echo Bank's 8-dimension scoring with explicit justifications per dimension is <em>inherently explainable</em> — each score comes with a written justification referencing applicant data.</div>
+      <div class="reg-verdict reg-ok">✦ Compliant by design — explainable scoring</div>
+    </div>
+    <div class="reg-card">
+      <div class="reg-title">Equal Credit Opportunity Act (ECOA / Reg B)</div>
+      <div class="reg-desc">Prohibits discrimination on race, color, religion, national origin, sex, marital status, age. Voice data could theoretically encode proxies for protected classes (accent → national origin, pitch → gender). <strong>Mitigation:</strong> Echo Bank scores the <em>content</em> of what applicants say (repayment plan, employment) — not vocal characteristics like pitch, accent, or speech patterns. The LLM analyzes the transcript text, not raw audio features.</div>
+      <div class="reg-verdict reg-ok">✦ Content-based, not voice-feature-based</div>
+    </div>
+    <div class="reg-card">
+      <div class="reg-title">Disparate Impact Analysis</div>
+      <div class="reg-desc">CFPB Jan 2025 Supervisory Highlights: all AI underwriting models must undergo disparate impact testing and search for Less Discriminatory Alternatives (LDAs). <strong>Note:</strong> The CFPB has proposed <em>eliminating</em> disparate impact liability under ECOA (Nov 2025 proposed rule), but this is not yet final. Echo Bank should conduct regular disparate impact audits regardless — it's good practice and required for bank partnerships.</div>
+      <div class="reg-verdict reg-caution">⚠ Requires ongoing auditing — landscape shifting</div>
+    </div>
+    <div class="reg-card">
+      <div class="reg-title">CFPB on AI & Black Box Models</div>
+      <div class="reg-desc">CFPB has stated there is <strong>no technology exception</strong> to FCRA/ECOA. However, Echo Bank's architecture is uniquely positioned: the 8-dimension framework with explicit weights, per-dimension justifications, and clear decision rules (approve ≥ 6.5, decline &lt; 4.5) creates a transparent, auditable system — more interpretable than typical ML-based credit models.</div>
+      <div class="reg-verdict reg-ok">✦ More transparent than typical AI models</div>
+    </div>
+    <div class="reg-card">
+      <div class="reg-title">Voice as Alternative Data — Risk Analysis</div>
+      <div class="reg-desc">Key distinction: Echo Bank does <strong>not</strong> use voice biometrics, vocal emotion analysis, or acoustic feature extraction. The voice memo is merely the <em>input modality</em> — Whisper converts it to text, then NLP analyzes the text content. This is functionally equivalent to a written application, just with a more accessible input method. This distinction is critical for regulators.</div>
+      <div class="reg-verdict reg-ok">✦ Voice = input modality, not scoring signal</div>
+    </div>
+    <div class="reg-card">
+      <div class="reg-title">State-Level Enforcement</div>
+      <div class="reg-desc">Even as federal enforcement softens, states are filling the gap. MA AG settled an AI lending case in July 2025 over disparate impact from institutional quality scoring. Echo Bank's "Education & Institutional Quality" dimension (0.15 weight) should be monitored for similar proxy effects. Recommend regular fair lending audits by state.</div>
+      <div class="reg-verdict reg-caution">⚠ Monitor state-level enforcement trends</div>
+    </div>
+  </div>
+
+  <div style="margin-top:16px;padding:14px;background:var(--gray-50);border-radius:10px;">
+    <p style="font-size:12px;color:var(--gray-700);font-weight:400;">
+      <strong>Bottom line:</strong> Echo Bank's architecture is regulation-friendly by design. The transparent 8-dimension framework with explicit justifications exceeds the explainability bar set by CFPB. The critical insight: voice is the <em>input modality</em>, not a scoring feature — the system analyzes what people say, not how they sound. Regular disparate impact audits and state-level monitoring are recommended as the regulatory landscape continues to evolve.
+    </p>
+  </div>
+  <div class="slide-number-badge">D</div>
+</div>
+
+<!-- ====== FINAL SLIDE ====== -->
+<div class="slide slide-cover" data-slide="21" style="text-align:center;align-items:center;">
+  <div style="font-size:44px;font-weight:300;color:white;">Echo Bank</div>
+  <div style="margin-top:14px;font-size:18px;font-weight:300;color:rgba(255,255,255,0.5);">Your voice is your loan application.</div>
+  <div style="margin-top:40px;font-size:13px;font-weight:300;color:rgba(255,255,255,0.3);">echobank.vercel.app</div>
+</div>
+
+</div><!-- end .deck -->
+
+<!-- ====== NAVIGATION BAR ====== -->
+<div class="nav-bar">
+  <button class="nav-btn" id="prevBtn" onclick="prev()">← Prev</button>
+  <div style="display:flex;align-items:center;gap:12px;">
+    <div class="nav-progress" id="navDots"></div>
+    <div class="nav-counter" id="navCounter">1 / 22</div>
+  </div>
+  <button class="nav-btn" id="nextBtn" onclick="next()">Next →</button>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  let current = 0;
+
+  function goTo(n) {
+    if (n < 0 || n >= total) return;
+    slides[current].classList.remove('active');
+    current = n;
+    slides[current].classList.add('active');
+    updateNav();
+  }
+
+  function next() { goTo(current + 1); }
+  function prev() { goTo(current - 1); }
+
+  function updateNav() {
+    document.getElementById('navCounter').textContent = `${current + 1} / ${total}`;
+    document.getElementById('prevBtn').disabled = current === 0;
+    document.getElementById('nextBtn').disabled = current === total - 1;
+    document.querySelectorAll('.nav-dot').forEach((dot, i) => {
+      dot.classList.toggle('active', i === current);
+    });
+  }
+
+  // Build dots
+  const dotsContainer = document.getElementById('navDots');
+  for (let i = 0; i < total; i++) {
+    const dot = document.createElement('div');
+    dot.className = 'nav-dot' + (i === 0 ? ' active' : '');
+    dot.onclick = () => goTo(i);
+    dotsContainer.appendChild(dot);
+  }
+
+  // Keyboard navigation
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); next(); }
+    if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); prev(); }
+    if (e.key === 'Home') { e.preventDefault(); goTo(0); }
+    if (e.key === 'End') { e.preventDefault(); goTo(total - 1); }
+  });
+
+  // Touch swipe support
+  let touchStartX = 0;
+  document.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; });
+  document.addEventListener('touchend', (e) => {
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(dx) > 60) { dx < 0 ? next() : prev(); }
+  });
+
+  updateNav();
+</script>
+
+</body>
+</html>

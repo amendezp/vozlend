@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { ArrowLeft, Mic, Download } from "lucide-react";
-import { getReport } from "@/lib/storage";
+import { getReport, fetchReport } from "@/lib/storage";
 import { useLanguage } from "@/context/LanguageContext";
 import { ReportHeader } from "@/components/report/ReportHeader";
 import { ScoreCard } from "@/components/report/ScoreCard";
@@ -23,10 +23,21 @@ export default function ReportPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const id = params.id as string;
-    const stored = getReport(id);
-    setReport(stored);
-    setLoading(false);
+    async function loadReport() {
+      const id = params.id as string;
+      // Try sessionStorage first (instant after processing)
+      const stored = getReport(id);
+      if (stored) {
+        setReport(stored);
+        setLoading(false);
+        return;
+      }
+      // Fallback to database API
+      const fetched = await fetchReport(id);
+      setReport(fetched);
+      setLoading(false);
+    }
+    loadReport();
   }, [params.id]);
 
   const handleDownloadPDF = () => {

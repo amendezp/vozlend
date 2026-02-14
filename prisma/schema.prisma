@@ -1,0 +1,100 @@
+// ============================================
+// Echo Bank — Database Schema
+// SQLite for MVP, migrate to PostgreSQL for production
+// ============================================
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+// --- Authentication ---
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  passwordHash  String
+  role          String    @default("lender") // "admin" | "lender" | "viewer"
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  applications  Application[]
+  auditLogs     AuditLog[]
+}
+
+// --- Loan Applications ---
+
+model Application {
+  id              String   @id @default(cuid())
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Who submitted it
+  submittedBy     User     @relation(fields: [submittedById], references: [id])
+  submittedById   String
+
+  // Status tracking
+  status          String   @default("pending") // "pending" | "processing" | "completed" | "failed"
+
+  // Audio metadata
+  audioFileName   String?
+  audioDuration   Float?
+  audioLanguage   String?
+
+  // Transcription
+  transcription   String?  // raw text from Whisper
+
+  // Extracted data (JSON)
+  extractedData   String?  // JSON string of LoanApplication
+
+  // Underwriting result (JSON)
+  underwritingResult String? // JSON string of UnderwritingResult
+
+  // Decision summary (denormalized for quick queries)
+  decision        String?  // "approve" | "decline" | "request_more_info"
+  weightedScore   Float?
+  applicantName   String?
+  loanAmount      Float?
+  loanCurrency    String?
+  loanPurpose     String?
+
+  // Audit trail
+  auditLogs       AuditLog[]
+}
+
+// --- Audit Logging ---
+
+model AuditLog {
+  id            String   @id @default(cuid())
+  createdAt     DateTime @default(now())
+
+  // Who did what
+  user          User     @relation(fields: [userId], references: [id])
+  userId        String
+
+  // What happened
+  action        String   // "create_application" | "view_report" | "export_pdf" | "login" | "logout"
+  entityType    String?  // "application" | "user"
+  entityId      String?
+
+  // Optional link to application
+  application   Application? @relation(fields: [applicationId], references: [id])
+  applicationId String?
+
+  // Extra context
+  metadata      String?  // JSON string with additional details (IP, user agent, etc.)
+}
+
+// --- Rate Limiting ---
+
+model RateLimit {
+  id        String   @id @default(cuid())
+  key       String   @unique // IP address or user ID
+  count     Int      @default(0)
+  windowStart DateTime @default(now())
+}

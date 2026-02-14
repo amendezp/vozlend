@@ -30,16 +30,16 @@ export async function transcribeAudio(
 
   const file = new File([new Uint8Array(audioBuffer)], apiFileName, { type: mimeType });
 
+  // Let Whisper auto-detect language (supports EN, ES, and 50+ others)
   const transcription = await openai.audio.transcriptions.create({
     model: "whisper-1",
     file: file,
-    language: "es",
     response_format: "verbose_json",
   });
 
   return {
     text: transcription.text,
-    language: transcription.language || "es",
+    language: transcription.language || "unknown",
     duration: transcription.duration || 0,
   };
 }

@@ -1,6 +1,7 @@
 // ============================================
-// Client-side Storage (sessionStorage)
-// MVP: No database needed
+// Client-side Storage (sessionStorage) + Database fallback
+// Stores report client-side for immediate access after processing,
+// then falls back to API fetch for persistent reports
 // ============================================
 
 import type { FullReport } from "@/types";
@@ -26,6 +27,19 @@ export function getReport(id: string): FullReport | null {
     return data ? JSON.parse(data) : null;
   } catch (e) {
     console.warn("[EchoBank] Failed to retrieve report:", e);
+    return null;
+  }
+}
+
+/**
+ * Fetch report from API (database) — used when sessionStorage miss
+ */
+export async function fetchReport(id: string): Promise<FullReport | null> {
+  try {
+    const res = await fetch(`/api/applications/${id}`);
+    if (!res.ok) return null;
+    return await res.json();
+  } catch {
     return null;
   }
 }
